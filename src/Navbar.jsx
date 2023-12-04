@@ -13,12 +13,25 @@ const Navbar = () => {
             initialRouteName="FriendsPage"
             screenOptions={{
                 tabBarShowLabel: false,
-                tabBarActiveTintColor: "red",
+                tabBarActiveTintColor: "green",
                 tabBarInactiveTintColor: "white",
-                tabBarActiveBackgroundColor: "#474545",
-                tabBarInactiveBackgroundColor: "#474545",
                 headerShown: false,
-                tabBarStyle: { borderTopWidth: 0 }
+                tabBarStyle: {
+                    borderTopWidth: 0,
+                    backgroundColor: "#000000",
+                    borderRadius: 30,
+                    position: 'absolute',
+                    bottom: 20,
+                    left: 20,
+                    right: 20,
+                    height: 60,
+                    elevation: 5,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    padding: 10,
+                }
             }}
         >
             <Tab.Screen
