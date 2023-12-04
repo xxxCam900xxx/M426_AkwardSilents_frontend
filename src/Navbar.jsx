@@ -3,6 +3,7 @@ import React from 'react'
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import ProfilePage from "./pages/ProfilePage"
 import FriendsPage from "./pages/FriendsPage"
+import ServerPage from './pages/ServerPage';
 
 const Tab = createBottomTabNavigator()
 
@@ -20,6 +21,13 @@ const Navbar = () => {
                 tabBarStyle: { borderTopWidth: 0 }
             }}
         >
+            <Tab.Screen
+                name="ServerPage"
+                component={ServerPage}
+                options={{
+                    tabBarIcon: ({ color }) => <MaterialIcons name="storage" size={24} color={color} />
+                }}
+            />
             <Tab.Screen
                 name="FriendsPage"
                 component={FriendsPage}
