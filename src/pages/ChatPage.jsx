@@ -1,9 +1,11 @@
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 
 function ChatPage() {
     return (
-        <Text>ChatPage</Text>
+        <View>
+            <Text>ChatPage</Text>
+        </View>
     )
 }
 

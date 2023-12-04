@@ -1,9 +1,11 @@
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 
 function FriendsPage() {
     return (
-        <Text>FriendsPage</Text>
+        <View>
+            <Text>FriendsPage</Text>
+        </View>
     )
 }
 

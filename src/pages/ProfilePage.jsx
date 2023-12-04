@@ -1,9 +1,11 @@
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 
 function ProfilePage() {
     return (
-        <Text>ProfilePage</Text>
+        <View>
+            <Text>ProfilePage</Text>
+        </View>
     )
 }
 
