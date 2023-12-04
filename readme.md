@@ -9,3 +9,7 @@ npx expo start
 - ![#232D3F](https://placehold.co/15x15/232D3F/232D3F.png) `#232D3F`/ Secondary
 - ![#005B41](https://placehold.co/15x15/005B41/005B41.png) `#005B41`/ Other
 - ![#008170](https://placehold.co/15x15/008170/008170.png) `#008170`/ Other
+
+## Wireframe
+
+https://www.figma.com/file/apjRQ6YHz6XdwOFT44NSd0/Chat-App.-(-Chatdong)-(Community)?type=design&node-id=0-1&mode=design&t=0meglV0IpUAnFun5-0
