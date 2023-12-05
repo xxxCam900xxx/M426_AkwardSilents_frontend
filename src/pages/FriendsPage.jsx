@@ -27,20 +27,25 @@ const recentChats = [
 
 function FriendsPage() {
     return (
-        <View style={{ flex: 1, backgroundColor: '#232D3F', paddingTop: 34 }}>
+        <View style={{ flex: 1, backgroundColor: '#232D3F' }}>
+            {/* Header mit Titel und Add Contact Button */}
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
                 <Text style={{ color: 'white', fontSize: 24 }}>Recent Chats</Text>
                 <TouchableOpacity style={{ backgroundColor: '#005B41', padding: 10, borderRadius: 20 }}>
                     <MaterialIcons name="add" size={24} color="white" />
                 </TouchableOpacity>
             </View>
+            {/* Chat-Liste */}
             <FlatList
                 data={recentChats}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', padding: 18, borderBottomWidth: 1, borderColor: 'white' }}>
-                        <Text style={{ color: 'white', fontSize: 21 }}>{item.name}</Text>
-                        <Text style={{ color: 'white', fontSize: 17, marginLeft: 10 }}>{item.lastMessage}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderColor: 'white' }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ color: 'white', fontSize: 18 }}>{item.name}</Text>
+                            <Text style={{ color: 'white', fontSize: 14, marginLeft: 10 }}>{item.lastMessage}</Text>
+                        </View>
+                        <Text style={{ color: 'white', fontSize: 14 }}>{item.time}</Text>
                     </View>
                 )}
             />
