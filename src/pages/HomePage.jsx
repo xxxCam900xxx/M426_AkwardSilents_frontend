@@ -14,12 +14,9 @@ const HomePage = () => {
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="contain" style={styles.image}></ImageBackground>
 
-      <View style={styles.centeredContainer}>
-        <Text style={styles.largeText}>Call Your Friends Simply And Simple With AkwardSilents</Text>
-      </View>
-
       <View style={styles.bottomContainer}>
-        <Text style={styles.text}>It’s easy to talk to your friends with AkwardSilents</Text>
+      <Text style={styles.largeText}>It’s easy to talk to your friends with AkwardSilents</Text>
+        <Text style={styles.text}>Call Your Friends Simply And Simple With AkwardSilents</Text>
         <TouchableOpacity style={styles.button} onPress={navigateButton}>
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
@@ -31,7 +28,7 @@ const HomePage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#101010',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -42,39 +39,34 @@ const styles = StyleSheet.create({
     height: '50%',
     justifyContent: 'center',
   },
-  centeredContainer: {
-    position: 'absolute',
-    top: '50%',
-    alignItems: 'center',
-  },
   bottomContainer: {
     position: 'absolute',
-    bottom: 40,
+    bottom: 60,
     alignItems: 'center',
   },
   largeText: {
-    fontSize: 24,
+    fontSize: 50,
     fontWeight: 'bold',
     textAlign: 'center',
     color: 'white',
-    marginBottom: 20,
+    marginBottom: 45,
   },
   text: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
   },
   button: {
-    backgroundColor: 'green',
-    paddingVertical: 20,
-    paddingHorizontal: 40,
+    backgroundColor: '#006400',
+    paddingVertical: 15,
+    paddingHorizontal: 60,
     borderRadius: 10,
   },
   buttonText: {
-    color: 'white',
-    fontSize: 20,
+    color: '#E1D9D1',
+    fontSize: 25,
     fontWeight: 'bold',
   },
 });
