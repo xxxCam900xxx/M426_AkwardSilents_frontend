@@ -33,7 +33,7 @@ function ProfilePage() {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#232D3F' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, paddingTop: 51 }}>
                 <Text style={{ color: 'white', fontSize: 24 }}>Profil</Text>
                 <TouchableOpacity onPress={() => setIsEditing(!isEditing)} style={{ backgroundColor: '#005B41', padding: 10, borderRadius: 20 }}>
                     <MaterialIcons name={isEditing ? 'save' : 'edit'} size={24} color="white" />

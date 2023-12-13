@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 const recentChats = [
@@ -25,16 +25,29 @@ const recentChats = [
     { id: '20', name: 'Tom', lastMessage: 'Wann treffen wir uns?', time: '06:20 AM' },
 ];
 
+const availableContacts = [
+    { id: '101', name: 'Person A' },
+    { id: '102', name: 'Person B' },
+];
+
 function FriendsPage() {
+
+    const [isModalVisible, setModalVisible] = useState(false);
+
+    const toggleModal = () => {
+        setModalVisible(!isModalVisible);
+    };
+
     return (
         <View style={{ flex: 1, backgroundColor: '#232D3F' }}>
             {/* Header mit Titel und Add Contact Button */}
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, paddingTop: 51 }}>
                 <Text style={{ color: 'white', fontSize: 24 }}>Recent Chats</Text>
-                <TouchableOpacity style={{ backgroundColor: '#005B41', padding: 10, borderRadius: 20 }}>
+                <TouchableOpacity style={{ backgroundColor: '#005B41', padding: 10, borderRadius: 20 }} onPress={toggleModal}>
                     <MaterialIcons name="add" size={24} color="white" />
                 </TouchableOpacity>
             </View>
+
             {/* Chat-Liste */}
             <FlatList
                 data={recentChats}
@@ -49,8 +62,48 @@ function FriendsPage() {
                     </View>
                 )}
             />
+
+            {/* Modal Overlay für Personenliste */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={toggleModal}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={{ color: 'black', fontSize: 24 }}>Add Contact</Text>
+                        <FlatList
+                            data={availableContacts}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity onPress={() => console.log('hier die logik um einer person zu schreiben')}>
+                                    <Text style={{ fontSize: 18 }}>{item.name}</Text>
+                                </TouchableOpacity>
+                            )}
+                        />
+                        <TouchableOpacity onPress={toggleModal}>
+                            <Text style={{ color: 'blue', fontSize: 18, marginTop: 10 }}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 50,
+        borderRadius: 10,
+    },
+});
 
 export default FriendsPage;
