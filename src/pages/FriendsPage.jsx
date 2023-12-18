@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const recentChats = [
     { id: '1', name: 'Alice', lastMessage: 'Wie geht es dir?', time: '10:30 AM' },
@@ -26,11 +27,31 @@ const recentChats = [
 ];
 
 const availableContacts = [
-    { id: '101', name: 'Person A' },
-    { id: '102', name: 'Person B' },
+    { id: '101', name: 'Emma Johnson' },
+    { id: '102', name: 'Liam Davis' },
+    { id: '103', name: 'Olivia Smith' },
+    { id: '104', name: 'Noah Wilson' },
+    { id: '105', name: 'Ava Brown' },
+    { id: '106', name: 'Isabella Jones' },
+    { id: '107', name: 'Sophia Taylor' },
+    { id: '108', name: 'Jackson Miller' },
+    { id: '109', name: 'Lucas Anderson' },
+    { id: '110', name: 'Aiden Thomas' },
+    { id: '111', name: 'Ella White' },
+    { id: '112', name: 'Carter Moore' },
+    { id: '113', name: 'Scarlett Robinson' },
+    { id: '114', name: 'Grayson Hall' },
+    { id: '115', name: 'Hazel Young' },
+    { id: '116', name: 'Aria Mitchell' },
+    { id: '117', name: 'Ezra Turner' },
+    { id: '118', name: 'Mila Cooper' },
+    { id: '119', name: 'Leo Reed' },
+    { id: '120', name: 'Nora Ward' },
 ];
 
 function FriendsPage() {
+
+    const navigation = useNavigation();
 
     const [isModalVisible, setModalVisible] = useState(false);
 
@@ -53,13 +74,15 @@ function FriendsPage() {
                 data={recentChats}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderColor: 'white' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: 'white', fontSize: 18 }}>{item.name}</Text>
-                            <Text style={{ color: 'white', fontSize: 14, marginLeft: 10 }}>{item.lastMessage}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('ChatPage', { chatId: item.id })}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 17, borderBottomWidth: 1, borderColor: 'white' }}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ color: 'white', fontSize: 18 }}>{item.name}</Text>
+                                <Text style={{ color: 'white', fontSize: 14, marginLeft: 10 }}>{item.lastMessage}</Text>
+                            </View>
+                            <Text style={{ color: 'white', fontSize: 14 }}>{item.time}</Text>
                         </View>
-                        <Text style={{ color: 'white', fontSize: 14 }}>{item.time}</Text>
-                    </View>
+                    </TouchableOpacity>
                 )}
             />
 
@@ -72,23 +95,26 @@ function FriendsPage() {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <Text style={{ color: 'black', fontSize: 24 }}>Add Contact</Text>
+                        <Text style={{ color: '#DFDFDF', fontSize: 24 }}>Add Contact</Text>
                         <FlatList
                             data={availableContacts}
                             keyExtractor={(item) => item.id}
                             renderItem={({ item }) => (
-                                <TouchableOpacity onPress={() => console.log('hier die logik um einer person zu schreiben')}>
-                                    <Text style={{ fontSize: 18 }}>{item.name}</Text>
+                                <TouchableOpacity onPress={() => {
+                                    toggleModal();
+                                    navigation.navigate('ChatPage', { chatId: item.id })
+                                }}>
+                                    <Text style={{ color: '#DFDFDF', fontSize: 18, paddingTop: 17 }}>{item.name}</Text>
                                 </TouchableOpacity>
                             )}
                         />
-                        <TouchableOpacity onPress={toggleModal}>
-                            <Text style={{ color: 'blue', fontSize: 18, marginTop: 10 }}>Close</Text>
+                        <TouchableOpacity onPress={toggleModal} style={{ marginTop: 10 }}>
+                            <FontAwesome name="close" size={24} color="red" />
                         </TouchableOpacity>
                     </View>
                 </View>
-            </Modal>
-        </View>
+            </Modal >
+        </View >
     );
 }
 
@@ -100,9 +126,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: '#232D3F',
         padding: 50,
         borderRadius: 10,
+        width: '80%',
+        marginVertical: 68,
     },
 });
 
