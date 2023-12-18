@@ -1,13 +1,14 @@
 import React from 'react';
 import { ImageBackground, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+
 const image = require('../Pictures/HomeH.jpg');
 
 const HomePage = () => {
   const navigation = useNavigation();
 
-  const navigateButton = () => {
-    navigation.navigate('Navbar');
+  const navigateToRegister = () => {
+    navigation.navigate('RegisterPage'); 
   };
 
   return (
@@ -15,9 +16,9 @@ const HomePage = () => {
       <ImageBackground source={image} resizeMode="contain" style={styles.image}></ImageBackground>
 
       <View style={styles.bottomContainer}>
-      <Text style={styles.largeText}>It’s easy to talk to your friends with AkwardSilents</Text>
+        <Text style={styles.largeText}>It’s easy to talk to your friends with AkwardSilents</Text>
         <Text style={styles.text}>Call Your Friends Simply And Simple With AkwardSilents</Text>
-        <TouchableOpacity style={styles.button} onPress={navigateButton}>
+        <TouchableOpacity style={styles.button} onPress={navigateToRegister}>
           <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
       </View>
