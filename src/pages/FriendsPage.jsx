@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const recentChats = [
     { id: '1', name: 'Alice', lastMessage: 'Wie geht es dir?', time: '10:30 AM' },
@@ -32,6 +33,8 @@ const availableContacts = [
 
 function FriendsPage() {
 
+    const navigation = useNavigation();
+
     const [isModalVisible, setModalVisible] = useState(false);
 
     const toggleModal = () => {
@@ -53,13 +56,15 @@ function FriendsPage() {
                 data={recentChats}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderColor: 'white' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: 'white', fontSize: 18 }}>{item.name}</Text>
-                            <Text style={{ color: 'white', fontSize: 14, marginLeft: 10 }}>{item.lastMessage}</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('ChatPage', { chatId: item.id })}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderColor: 'white' }}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ color: 'white', fontSize: 18 }}>{item.name}</Text>
+                                <Text style={{ color: 'white', fontSize: 14, marginLeft: 10 }}>{item.lastMessage}</Text>
+                            </View>
+                            <Text style={{ color: 'white', fontSize: 14 }}>{item.time}</Text>
                         </View>
-                        <Text style={{ color: 'white', fontSize: 14 }}>{item.time}</Text>
-                    </View>
+                    </TouchableOpacity>
                 )}
             />
 
@@ -77,7 +82,10 @@ function FriendsPage() {
                             data={availableContacts}
                             keyExtractor={(item) => item.id}
                             renderItem={({ item }) => (
-                                <TouchableOpacity onPress={() => console.log('hier die logik um einer person zu schreiben')}>
+                                <TouchableOpacity onPress={() => {
+                                    navigation.navigate('ChatPage', { chatId: item.id })
+                                    console.log('{ chatId: item.id }')
+                                }}>
                                     <Text style={{ fontSize: 18 }}>{item.name}</Text>
                                 </TouchableOpacity>
                             )}
@@ -87,8 +95,8 @@ function FriendsPage() {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </Modal>
-        </View>
+            </Modal >
+        </View >
     );
 }
 

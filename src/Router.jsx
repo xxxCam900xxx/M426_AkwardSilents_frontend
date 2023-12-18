@@ -14,7 +14,7 @@ export const Router = () => {
             <Stack.Screen name='HomePage' component={HomePage} />
             <Stack.Screen name='ServerPage' component={ServerPage} />
             <Stack.Screen name='Navbar' component={Navbar} />
-            <Stack.Screen name='ChatPage' component={ChatPage} />
+            <Stack.Screen name='ChatPage' initialParams={{ chatId: undefined }} component={ChatPage} />
             <Stack.Screen name='ProfilePage' component={ProfilePage} />
         </Stack.Navigator>
     );
