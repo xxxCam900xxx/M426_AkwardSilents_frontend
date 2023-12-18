@@ -67,7 +67,7 @@ const RegisterPage = () => {
       country: selectedCountry,
     };
     try {
-      await SecureStore.setItem('userData', JSON.stringify(registrationData));
+      await SecureStore.setItemAsync('userData', JSON.stringify(registrationData));
     } catch (error) {
       console.error('Error saving user data:', error);
     }
