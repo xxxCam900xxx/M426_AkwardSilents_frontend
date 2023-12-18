@@ -1,12 +1,8 @@
-import React from 'react'
-import { Text, View } from 'react-native'
+import React, { useState } from 'react';
+import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 
-function ServerPage() {
-    return (
-        <View>
-            <Text>ServerPage</Text>
-        </View>
-    )
-}
 
-export default ServerPage
+
+function ServerPage() {}
+
+export default ServerPage;
