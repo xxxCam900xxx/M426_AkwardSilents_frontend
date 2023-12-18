@@ -182,6 +182,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   modalContainer: {
+    paddingTop: 51,
+    paddingBottom: 51,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -191,11 +193,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-  },
-  countryFlag: {
-    width: 30,
-    height: 20,
-    marginRight: 10,
   },
   countryName: {
     color: 'white',
