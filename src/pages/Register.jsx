@@ -86,7 +86,7 @@ const RegisterPage = () => {
         placeholder="Benutzername"
         value={userName}
         onChangeText={setUserName}
-        placeholderTextColor="gray" 
+        placeholderTextColor="gray"
       />
 
       <TextInput
@@ -94,7 +94,7 @@ const RegisterPage = () => {
         placeholder="Hobbys"
         value={hobbies}
         onChangeText={setHobbies}
-        placeholderTextColor="gray" 
+        placeholderTextColor="gray"
       />
 
       <View style={styles.phoneInputContainer}>
@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    paddingTop: 51,
   },
   phoneInputContainer: {
     flexDirection: 'row',
