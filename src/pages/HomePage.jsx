@@ -7,7 +7,7 @@ const HomePage = () => {
   const navigation = useNavigation();
 
   const navigateButton = () => {
-    navigation.navigate('Navbar');
+    navigation.navigate('ServerPage');
   };
 
   return (

@@ -13,3 +13,9 @@ npx expo start
 ## Wireframe
 
 https://www.figma.com/file/apjRQ6YHz6XdwOFT44NSd0/Chat-App.-(-Chatdong)-(Community)?type=design&node-id=0-1&mode=design&t=0meglV0IpUAnFun5-0
+
+
+## Definition of Done
+
+- Vier Augen prinzip
+- Pull Request eröffnet und bestätigt
