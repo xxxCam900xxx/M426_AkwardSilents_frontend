@@ -83,8 +83,8 @@ function FriendsPage() {
                             keyExtractor={(item) => item.id}
                             renderItem={({ item }) => (
                                 <TouchableOpacity onPress={() => {
+                                    toggleModal();
                                     navigation.navigate('ChatPage', { chatId: item.id })
-                                    console.log('{ chatId: item.id }')
                                 }}>
                                     <Text style={{ fontSize: 18 }}>{item.name}</Text>
                                 </TouchableOpacity>
