@@ -1,5 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+    View,
+    Text,
+    FlatList,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet,
+    KeyboardAvoidingView,
+    Platform,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -30,12 +39,17 @@ const exampleMessages = [
     { id: 24, sender: 'Me', message: 'Ich auch! Bis später!' },
 ];
 
-function ChatPage() {
+const ChatPage = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { chatId } = route.params;
 
     const [inputMessage, setInputMessage] = useState('');
+    const flatListRef = useRef(null);
+
+    const setFlatListRef = (ref) => {
+        flatListRef.current = ref;
+    };
 
     const renderMessage = ({ item }) => (
         <View style={item.sender === 'Me' ? styles.myMessage : styles.friendMessage}>
@@ -44,44 +58,53 @@ function ChatPage() {
     );
 
     const sendMessage = () => {
-        //Logik , um die Nachricht zu senden
         console.log('Nachricht senden:', inputMessage);
         setInputMessage('');
     };
 
+    useEffect(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+    }, [exampleMessages]);
+
     return (
-        <View style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={24} color="white" />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>{`Chat mit ${chatId}`}</Text>
-            </View>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.container}
+        >
+            <View style={styles.container}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Ionicons name="arrow-back" size={24} color="white" />
+                    </TouchableOpacity>
+                    <Text style={styles.headerText}>{`Chat mit ${chatId}`}</Text>
+                </View>
 
-            {/* Nachrichtenliste */}
-            <FlatList
-                data={exampleMessages}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={renderMessage}
-                style={styles.messageList}
-            />
-
-            {/* Eingabebereich für neue Nachricht */}
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Schreibe eine Nachricht..."
-                    value={inputMessage}
-                    onChangeText={(text) => setInputMessage(text)}
+                {/* Nachrichtenliste */}
+                <FlatList
+                    ref={setFlatListRef}
+                    data={exampleMessages}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={renderMessage}
+                    style={styles.messageList}
                 />
-                <TouchableOpacity onPress={sendMessage}>
-                    <Ionicons name="paper-plane" size={34} style={styles.sendIcon} />
-                </TouchableOpacity>
+
+                {/* Eingabebereich für neue Nachricht */}
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Schreibe eine Nachricht..."
+                        value={inputMessage}
+                        onChangeText={(text) => setInputMessage(text)}
+                    />
+                    <TouchableOpacity onPress={sendMessage}>
+                        <Ionicons name="paper-plane" size={34} style={styles.sendIcon} />
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -130,7 +153,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 17,
+        padding: 10,
         backgroundColor: '#0F0F0F',
     },
     input: {
