@@ -1,14 +1,20 @@
 import React from 'react';
 import { ImageBackground, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+import * as SecureStore from 'expo-secure-store';
 
 const image = require('../Pictures/HomeH.jpg');
 
 const HomePage = () => {
   const navigation = useNavigation();
 
-  const navigateToRegister = () => {
-    navigation.navigate('RegisterPage'); 
+  const navigateToRegister = async () => {
+    const isRegistered = await SecureStore.getItemAsync('userData');
+    if (isRegistered) {
+      navigation.navigate('Navbar');
+    } else {
+      navigation.navigate('RegisterPage');
+    }
   };
 
   return (

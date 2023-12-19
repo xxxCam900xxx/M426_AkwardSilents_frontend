@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { Text, View, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
+import { useNavigation } from '@react-navigation/core';
 
 function ProfilePage() {
     const [userProfile, setUserProfile] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [editedAttribute, setEditedAttribute] = useState('');
     const [editedValue, setEditedValue] = useState('');
+    const navigation = useNavigation();
 
     useEffect(() => {
         const loadUserData = async () => {
@@ -45,6 +47,11 @@ function ProfilePage() {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        await SecureStore.deleteItemAsync('userData');
+        navigation.navigate('HomePage');
+    };
+
     return (
         <View style={{ flex: 1, backgroundColor: '#232D3F', padding: 17, paddingTop: 51 }}>
             <Text style={{ color: 'white', fontSize: 24, marginBottom: 20 }}>Profile</Text>
@@ -71,6 +78,8 @@ function ProfilePage() {
             <TouchableOpacity onPress={() => handleEditPress('hobbies', userProfile.hobbies)}>
                 <Text style={{ color: 'white', fontSize: 16, textDecorationLine: 'underline' }}>Edit Hobbies</Text>
             </TouchableOpacity>
+
+            <Button title="Delete Account" onPress={handleDeleteAccount} />
 
             <Modal visible={isEditing} transparent={true} animationType="slide">
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
