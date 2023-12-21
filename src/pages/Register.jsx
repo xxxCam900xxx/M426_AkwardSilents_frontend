@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+import * as SecureStore from 'expo-secure-store';
 
 const countries = [
   { code: '+40', name: 'Rumänien', flag: require('../Pictures/flaggen/Flag_of_Romania.svg.webp') },
@@ -66,7 +67,7 @@ const RegisterPage = () => {
       country: selectedCountry,
     };
     try {
-      await AsyncStorage.setItem('userData', JSON.stringify(registrationData));
+      await SecureStore.setItemAsync('userData', JSON.stringify(registrationData));
     } catch (error) {
       console.error('Error saving user data:', error);
     }
@@ -182,6 +183,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   modalContainer: {
+    paddingTop: 51,
+    paddingBottom: 51,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -191,11 +194,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
-  },
-  countryFlag: {
-    width: 30,
-    height: 20,
-    marginRight: 10,
   },
   countryName: {
     color: 'white',
