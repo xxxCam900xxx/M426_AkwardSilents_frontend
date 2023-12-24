@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, Modal, TextInput, Button, Alert } from 'react-native';
+import { Text, View, TouchableOpacity, Modal, TextInput, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/core';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -53,6 +53,10 @@ function ProfilePage() {
             console.error('Error saving user data:', error);
         }
     };
+
+    const handleCancelPress = () => {
+        setIsEditing(false);
+    }
 
     const deleteUserDataAndNavigate = async () => {
         await SecureStore.deleteItemAsync('userData');
@@ -108,33 +112,40 @@ function ProfilePage() {
             </View>
 
             <Modal visible={isEditing} transparent={true} animationType="slide">
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                    <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' }}>
-                        <Text style={{ fontSize: 18, marginBottom: 10 }}>Bearbeiten</Text>
-                        <TextInput
-                            style={{ borderColor: 'gray', borderWidth: 1, padding: 10, marginBottom: 10 }}
-                            placeholder="Username"
-                            value={editedValue.userName}
-                            onChangeText={(text) => setEditedValue({ ...editedValue, userName: text })}
-                        />
-                        <TextInput
-                            style={{ borderColor: 'gray', borderWidth: 1, padding: 10, marginBottom: 10 }}
-                            placeholder="Hobbies"
-                            value={editedValue.hobbies}
-                            onChangeText={(text) => setEditedValue({ ...editedValue, hobbies: text })}
-                        />
-                        <TextInput
-                            style={{ borderColor: 'gray', borderWidth: 1, padding: 10, marginBottom: 10 }}
-                            placeholder="Phone Number"
-                            value={editedValue.phoneNumber}
-                            onChangeText={(text) => setEditedValue({ ...editedValue, phoneNumber: text })}
-                            keyboardType="numeric"
-                        />
-                        <TouchableOpacity onPress={handleSavePress} style={{ backgroundColor: '#005B41', padding: 10, borderRadius: 5 }}>
-                            <Text style={{ color: 'white' }}>Save</Text>
-                        </TouchableOpacity>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                        <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, width: '80%' }}>
+                            <Text style={{ fontSize: 18, marginBottom: 10 }}>Bearbeiten</Text>
+                            <TextInput
+                                style={{ borderColor: 'gray', borderWidth: 1, padding: 10, marginBottom: 10 }}
+                                placeholder="Username"
+                                value={editedValue.userName}
+                                onChangeText={(text) => setEditedValue({ ...editedValue, userName: text })}
+                            />
+                            <TextInput
+                                style={{ borderColor: 'gray', borderWidth: 1, padding: 10, marginBottom: 10 }}
+                                placeholder="Hobbies"
+                                value={editedValue.hobbies}
+                                onChangeText={(text) => setEditedValue({ ...editedValue, hobbies: text })}
+                            />
+                            <TextInput
+                                style={{ borderColor: 'gray', borderWidth: 1, padding: 10, marginBottom: 10 }}
+                                placeholder="Phone Number"
+                                value={editedValue.phoneNumber}
+                                onChangeText={(text) => setEditedValue({ ...editedValue, phoneNumber: text })}
+                                keyboardType="numeric"
+                            />
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <TouchableOpacity onPress={handleSavePress} style={{ backgroundColor: '#005B41', padding: 10, borderRadius: 5, flex: 1, marginRight: 10 }}>
+                                    <Text style={{ color: 'white', textAlign: 'center' }}>Save</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={handleCancelPress} style={{ backgroundColor: '#B22222', padding: 10, borderRadius: 5, flex: 1, marginLeft: 10 }}>
+                                    <Text style={{ color: 'white', textAlign: 'center' }}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </View>
-                </View>
+                </KeyboardAvoidingView>
             </Modal>
         </View>
     );

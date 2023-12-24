@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
     padding: 50,
     borderRadius: 10,
     width: '80%',
+    height: '80%',
     marginVertical: 68,
   },
   searchInput: {
