@@ -5,8 +5,7 @@ import HomePage from './pages/HomePage';
 import ChatPage from './pages/ChatPage';
 import Navbar from './Navbar';
 import ServerPage from './pages/ServerPage';
-import RegisterPage from './pages/Register';
-import FriendsPage from './pages/FriendsPage';
+import RegisterPage from './pages/RegisterPage';
 
 const Stack = createNativeStackNavigator();
 
