@@ -18,10 +18,8 @@ function ProfilePage() {
         const loadUserData = async () => {
             try {
                 const storedData = await SecureStore.getItemAsync('userData');
-                console.log('Stored data:', storedData);
                 if (storedData) {
                     const parsedData = JSON.parse(storedData);
-                    console.log('Parsed data:', parsedData);
                     setUserProfile(parsedData);
                 }
             } catch (error) {
