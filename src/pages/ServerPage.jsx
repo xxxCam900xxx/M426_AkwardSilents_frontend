@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import {useNavigation} from "@react-navigation/core";
 
-const servers = [
-    { ip: '172.31.80.80' },
-    { ip: '172.31.80.81' },
-    { ip: '172.31.80.82' },
-];
+const servers = [];
 
 export default function ServerPage() {
     const [isModalVisible, setModalVisible] = useState(false);
     const [url, setUrl] = useState('');
     const [serverReachable, setServerReachable] = useState(false);
+    const navigation = useNavigation();
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
@@ -22,7 +20,6 @@ export default function ServerPage() {
     };
 
     const ServerPing = async () => {
-        try {
             // Make a HEAD request to the server
             const response = await fetch(`http://${url}`);
 
@@ -30,23 +27,19 @@ export default function ServerPage() {
             if (response.ok) {
                 setServerReachable(true);
                 console.log('Server is reachable:', response);
-                servers.push({ ip: url });
+                servers.push({ ip: url});
+                console.log(url)
+                //navigation.navigate('FriendsPage', { ip: url });
             } else {
-                console.error('Server returned an error:', response.status, response.statusText);
+                console.log('Server returned an error:', response.status, response.statusText);
                 setServerReachable(false);
             }
-        } catch (error) {
-            // Handle any errors that may occur
-            console.error('Error:', error.message); // Log the error message
-            setServerReachable(false);
-        }
     };
 
 
-
     useEffect(() => {
-        console.log(serverReachable);
-    }, [serverReachable]);
+        console.log(url);
+    }, [url]);
 
 
     return (
@@ -59,7 +52,7 @@ export default function ServerPage() {
                 </TouchableOpacity>
             </View>
 
-            {/* Chat-Liste */}
+            {/* Server-Liste */}
             <FlatList
                 data={servers}
                 keyExtractor={(item) => item.ip}

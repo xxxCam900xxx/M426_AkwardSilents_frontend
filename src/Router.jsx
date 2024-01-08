@@ -6,6 +6,7 @@ import ChatPage from './pages/ChatPage';
 import Navbar from './Navbar';
 import ServerPage from './pages/ServerPage';
 import RegisterPage from './pages/RegisterPage';
+import FriendsPage from "./pages/FriendsPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,8 +16,9 @@ export const Router = () => {
             <Stack.Screen name='HomePage' component={HomePage} />
             <Stack.Screen name='RegisterPage' component={RegisterPage} />
             <Stack.Screen name='ServerPage' component={ServerPage} />
+            <Stack.Screen name='FriendsPage' initialParams={{ ip: undefined}} component={FriendsPage} />
             <Stack.Screen name='Navbar' component={Navbar} />
-            <Stack.Screen name='ChatPage' initialParams={{ chatId: undefined }} component={ChatPage} />
+            <Stack.Screen name='ChatPage' initialParams={{ chatId: undefined}} component={ChatPage} />
             <Stack.Screen name='ProfilePage' component={ProfilePage} />
         </Stack.Navigator>
     );
