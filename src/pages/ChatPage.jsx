@@ -42,7 +42,7 @@ const exampleMessages = [
 const ChatPage = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const { chatId } = route.params;
+    const { chatId, chatName } = route.params;
 
     const [inputMessage, setInputMessage] = useState('');
     const flatListRef = useRef(null);
@@ -77,7 +77,7 @@ const ChatPage = () => {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Ionicons name="arrow-back" size={24} color="white" />
                     </TouchableOpacity>
-                    <Text style={styles.headerText}>{`Chat mit ${chatId}`}</Text>
+                    <Text style={styles.headerText}>{`Chat mit ${chatName}`}</Text>
                 </View>
 
                 {/* Nachrichtenliste */}

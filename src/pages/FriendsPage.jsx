@@ -3,7 +3,7 @@ import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, TextInput } 
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-const recentChats = [
+const recentChatsData = [
   { id: '1', name: 'Alice', lastMessage: 'Wie geht es dir?', time: '10:30 AM' },
   { id: '2', name: 'Bob', lastMessage: 'Wollen wir heute Abend ausgehen?', time: '11:45 AM' },
   { id: '3', name: 'Charlie', lastMessage: 'Ich freue mich auf das Wochenende!', time: '01:20 PM' },
@@ -26,7 +26,7 @@ const recentChats = [
   { id: '20', name: 'Tom', lastMessage: 'Wann treffen wir uns?', time: '06:20 AM' },
 ];
 
-const availableContacts = [
+const availableContactsData = [
   { id: '101', name: 'Emma Johnson' },
   { id: '102', name: 'Liam Davis' },
   { id: '103', name: 'Olivia Smith' },
@@ -54,7 +54,9 @@ function FriendsPage() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchQueryModal, setSearchQueryModal] = useState('');
-  const [addedContacts, setAddedContacts] = useState([]); // State for contacts added through modal
+  const [recentChats, setRecentChats] = useState(recentChatsData);
+  const [availableContacts, setAvailableContacts] = useState(availableContactsData);
+  const [addedContacts, setAddedContacts] = useState([]);
   const searchInputRef = useRef(null);
 
   const toggleModal = () => {
@@ -75,9 +77,31 @@ function FriendsPage() {
     return data.filter((item) => item.name?.toLowerCase().includes(searchQueryModal.toLowerCase()));
   };
 
-  const handleContactAdd = (contact) => {
-    setAddedContacts((prevContacts) => [...prevContacts, contact]);
+  const addContact = (contactId) => {
+    const newContact = availableContacts.find((contact) => contact.id === contactId);
+    if (newContact) {
+      console.log(`Kontakt mit der ID ${contactId} hinzugefügt.`);
+      setRecentChats((prevChats) => [
+        { id: newContact.id, name: newContact.name, lastMessage: '', time: '' },
+        ...prevChats,
+      ]);
+      setAddedContacts((prevAddedContacts) => [
+        { id: newContact.id, name: newContact.name },
+        ...prevAddedContacts,
+      ]);
+      setAvailableContacts((prevContacts) => prevContacts.filter((contact) => contact.id !== contactId));
+    }
     toggleModal();
+  };
+
+  const removeContact = (contactId) => {
+    const removedContact = addedContacts.find((contact) => contact.id === contactId);
+    if (removedContact) {
+      console.log(`Kontakt mit der ID ${contactId} entfernt.`);
+      setRecentChats((prevChats) => prevChats.filter((chat) => chat.id !== contactId));
+      setAvailableContacts((prevContacts) => [...prevContacts, removedContact]);
+      setAddedContacts((prevAddedContacts) => prevAddedContacts.filter((contact) => contact.id !== contactId));
+    }
   };
 
   return (
@@ -102,7 +126,7 @@ function FriendsPage() {
         data={filterChats(recentChats)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('ChatPage', { chatId: item.id })}>
+          <TouchableOpacity onPress={() => navigation.navigate('ChatPage', { chatId: item.id, chatName: item.name })}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 17, borderBottomWidth: 1, borderColor: 'white' }}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: 'white', fontSize: 18 }}>{item.name}</Text>
@@ -136,11 +160,24 @@ function FriendsPage() {
               data={filterContacts(availableContacts)}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleContactAdd(item)}>
+                <TouchableOpacity onPress={() => addContact(item.id)}>
                   <Text style={{ color: '#DFDFDF', fontSize: 18, paddingTop: 17 }}>{item.name}</Text>
                 </TouchableOpacity>
               )}
             />
+
+            <Text style={{ color: '#DFDFDF', fontSize: 24, marginTop: 20 }}>Added Contacts</Text>
+
+            <FlatList
+              data={addedContacts}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => removeContact(item.id)}>
+                  <Text style={{ color: '#DFDFDF', fontSize: 18, paddingTop: 17 }}>{item.name}</Text>
+                </TouchableOpacity>
+              )}
+            />
+
             <TouchableOpacity onPress={toggleModal} style={{ marginTop: 10 }}>
               <FontAwesome name="close" size={24} color="red" />
             </TouchableOpacity>
