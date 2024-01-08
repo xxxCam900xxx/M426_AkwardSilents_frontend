@@ -53,20 +53,31 @@ function FriendsPage() {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchQueryModal, setSearchQueryModal] = useState('');
+  const [addedContacts, setAddedContacts] = useState([]); // State for contacts added through modal
   const searchInputRef = useRef(null);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
-    setSearchQuery(''); // Zurücksetzen der Suchanfrage beim Schließen des Modals
+    setSearchQuery('');
+    setSearchQueryModal('');
   };
 
-  // Funktion zum Filtern von Chats und Kontakten basierend auf der Suchanfrage
-  const filterData = (data) => {
+  const filterChats = (data) => {
     return data.filter(
       (item) =>
         (item.name?.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (item.lastMessage?.toLowerCase().includes(searchQuery.toLowerCase()))
     );
+  };
+
+  const filterContacts = (data) => {
+    return data.filter((item) => item.name?.toLowerCase().includes(searchQueryModal.toLowerCase()));
+  };
+
+  const handleContactAdd = (contact) => {
+    setAddedContacts((prevContacts) => [...prevContacts, contact]);
+    toggleModal();
   };
 
   return (
@@ -78,19 +89,17 @@ function FriendsPage() {
         </TouchableOpacity>
       </View>
 
-      {/* Suchfeld */}
       <TextInput
         ref={searchInputRef}
         style={styles.searchInput}
-        placeholder="Suchen..."
+        placeholder="Search..."
         placeholderTextColor="gray"
         value={searchQuery}
         onChangeText={(text) => setSearchQuery(text)}
       />
 
-      {/* Chat-Liste */}
       <FlatList
-        data={filterData(recentChats)}
+        data={filterChats(recentChats)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => navigation.navigate('ChatPage', { chatId: item.id })}>
@@ -105,7 +114,6 @@ function FriendsPage() {
         )}
       />
 
-      {/* Modal Overlay für Personenliste */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -116,24 +124,19 @@ function FriendsPage() {
           <View style={styles.modalContent}>
             <Text style={{ color: '#DFDFDF', fontSize: 24 }}>Add Contact</Text>
 
-            {/* Suchfeld für Kontakte */}
             <TextInput
               style={styles.searchInput}
-              placeholder="Suchen..."
+              placeholder="Search..."
               placeholderTextColor="gray"
-              value={searchQuery}
-              onChangeText={(text) => setSearchQuery(text)}
+              value={searchQueryModal}
+              onChangeText={(text) => setSearchQueryModal(text)}
             />
 
-            {/* Liste der verfügbaren Kontakte */}
             <FlatList
-              data={filterData(availableContacts)}
+              data={filterContacts(availableContacts)}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => {
-                  toggleModal();
-                  navigation.navigate('ChatPage', { chatId: item.id })
-                }}>
+                <TouchableOpacity onPress={() => handleContactAdd(item)}>
                   <Text style={{ color: '#DFDFDF', fontSize: 18, paddingTop: 17 }}>{item.name}</Text>
                 </TouchableOpacity>
               )}
