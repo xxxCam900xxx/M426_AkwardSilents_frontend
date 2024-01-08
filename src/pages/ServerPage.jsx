@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import {useNavigation} from "@react-navigation/core";
+import { useNavigation } from "@react-navigation/core";
 
 const servers = [];
 
@@ -20,6 +20,11 @@ export default function ServerPage() {
     };
 
     const ServerPing = async () => {
+        if (!url) {
+            console.error('URL is empty');
+            return;
+        }
+        try {
             // Make a HEAD request to the server
             const response = await fetch(`http://${url}`);
 
@@ -27,13 +32,16 @@ export default function ServerPage() {
             if (response.ok) {
                 setServerReachable(true);
                 console.log('Server is reachable:', response);
-                servers.push({ ip: url});
+                servers.push({ ip: url });
                 console.log(url)
-                //navigation.navigate('FriendsPage', { ip: url });
+                navigation.navigate('FriendsPage', { ip: url });
             } else {
                 console.log('Server returned an error:', response.status, response.statusText);
                 setServerReachable(false);
             }
+        } catch (error) {
+            console.error('Error during network request:', error);
+        }
     };
 
 
