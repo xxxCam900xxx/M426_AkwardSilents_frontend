@@ -43,6 +43,7 @@ const ChatPage = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { chatId, chatName } = route.params;
+    console.log(route)
 
     const [inputMessage, setInputMessage] = useState('');
     const flatListRef = useRef(null);
