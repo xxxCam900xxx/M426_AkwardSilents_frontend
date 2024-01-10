@@ -3,13 +3,12 @@ import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } 
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/core";
 
-const servers = [];
-
 export default function ServerPage() {
     const [isModalVisible, setModalVisible] = useState(false);
     const [url, setUrl] = useState('');
     const [serverReachable, setServerReachable] = useState(false);
     const navigation = useNavigation();
+    const [servers, setServers] = useState([]);
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
@@ -19,11 +18,20 @@ export default function ServerPage() {
         setUrl(text);
     };
 
+    const removeServer = (serverId) => {
+        const index = servers.findIndex((server) => server.id === serverId);
+        if (index !== -1) {
+            const updatedServers = [...servers.slice(0, index), ...servers.slice(index + 1)];
+            setServers(updatedServers);
+        }
+    };
+
     const ServerPing = async () => {
         if (!url) {
             console.error('URL is empty');
             return;
         }
+
         try {
             // Make a HEAD request to the server
             const response = await fetch(`http://${url}`);
@@ -31,8 +39,11 @@ export default function ServerPage() {
             // Check if the response is successful (status code 200-299)
             if (response.ok) {
                 setServerReachable(true);
-                console.log('Server is reachable'); // Please don't log the response
-                servers.push({ ip: url });
+                console.log('Server is reachable');
+                // Generate a unique ID for the new server
+                const serverId = generateUniqueId(); // You should replace this with your logic
+                // Update the state to add the new server
+                setServers([...servers, { id: serverId, ip: url }]);
                 navigation.navigate('FriendsPage', { ip: url });
             } else {
                 console.log('Server returned an error:', response.status, response.statusText);
@@ -43,6 +54,9 @@ export default function ServerPage() {
         }
     };
 
+    const generateUniqueId = () => {
+        return Math.random().toString(36).substring(7);
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: '#232D3F' }}>
@@ -59,11 +73,16 @@ export default function ServerPage() {
                 data={servers}
                 keyExtractor={(item) => item.ip}
                 renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderColor: 'white' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ color: 'white', fontSize: 18 }}>{item.ip}</Text>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('FriendsPage', { ip: item.ip })}
+                        onLongPress={() => removeServer(item.id)}
+                    >
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderColor: 'white' }}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ color: 'white', fontSize: 18 }}>{item.ip}</Text>
+                            </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )}
             />
 
@@ -95,7 +114,6 @@ export default function ServerPage() {
                     </View>
                 </View>
             </Modal>
-            <Text>{serverReachable ? 'Reachable' : 'not Reachable'}</Text>
         </View>
     );
 }
