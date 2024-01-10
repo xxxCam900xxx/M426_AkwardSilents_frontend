@@ -31,9 +31,8 @@ export default function ServerPage() {
             // Check if the response is successful (status code 200-299)
             if (response.ok) {
                 setServerReachable(true);
-                console.log('Server is reachable:', response);
+                console.log('Server is reachable'); // Please don't log the response
                 servers.push({ ip: url });
-                console.log(url)
                 navigation.navigate('FriendsPage', { ip: url });
             } else {
                 console.log('Server returned an error:', response.status, response.statusText);
@@ -43,11 +42,6 @@ export default function ServerPage() {
             console.error('Error during network request:', error);
         }
     };
-
-
-    useEffect(() => {
-        console.log(url);
-    }, [url]);
 
 
     return (

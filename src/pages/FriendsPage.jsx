@@ -56,13 +56,11 @@ function FriendsPage() {
   const [searchQueryModal, setSearchQueryModal] = useState('');
   const [recentChats, setRecentChats] = useState(recentChatsData);
   const [availableContacts, setAvailableContacts] = useState(availableContactsData);
-  const [addedContacts, setAddedContacts] = useState([]);
   const searchInputRef = useRef(null);
   const route = useRoute();
   console.log(route)
   console.log('params:', route.params)
-  const { ip } = route.params;
-  console.log('ip: ', ip)
+  const { ip } = route.params ?? {};
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -111,7 +109,11 @@ function FriendsPage() {
   return (
     <View style={{ flex: 1, backgroundColor: '#232D3F' }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, paddingTop: 51 }}>
-        <Text style={{ color: 'white', fontSize: 24 }}>Recent Chats from {ip}</Text>
+        {ip ? (
+          <Text style={{ color: 'white', fontSize: 24 }}>Recent Chats from {ip}</Text>
+        ) : (
+          <Text style={{ color: 'white', fontSize: 24 }}>Recent Chats</Text>
+        )}
         <TouchableOpacity style={{ backgroundColor: '#005B41', padding: 10, borderRadius: 20 }} onPress={toggleModal}>
           <MaterialIcons name="add" size={24} color="white" />
         </TouchableOpacity>
