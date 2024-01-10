@@ -12,34 +12,33 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-const exampleMessages = [
-    { id: 1, sender: 'Friend', message: 'Hallo, wie geht es dir?' },
-    { id: 2, sender: 'Me', message: 'Hallo! Mir geht es gut, danke.' },
-    { id: 3, sender: 'Friend', message: 'Was machst du heute Abend?' },
-    { id: 4, sender: 'Me', message: 'Ich habe keine konkreten Pläne. Was schlägst du vor?' },
-    { id: 5, sender: 'Friend', message: 'Vielleicht könnten wir zusammen essen gehen?' },
-    { id: 6, sender: 'Me', message: 'Klingt gut! Hast du einen bestimmten Ort im Sinn?' },
-    { id: 7, sender: 'Friend', message: 'Wie wäre es mit dem neuen Restaurant in der Innenstadt?' },
-    { id: 8, sender: 'Me', message: 'Perfekt! Um welche Uhrzeit?' },
-    { id: 9, sender: 'Friend', message: '19 Uhr passt mir gut. Wie sieht es bei dir aus?' },
-    { id: 10, sender: 'Me', message: 'Das passt auch für mich. Wir sehen uns dort!' },
-    { id: 11, sender: 'Friend', message: 'Super! Freue mich darauf.' },
-    { id: 12, sender: 'Me', message: 'Ich auch! Bis später!' },
-    { id: 13, sender: 'Friend', message: 'Hallo, wie geht es dir?' },
-    { id: 14, sender: 'Me', message: 'Hallo! Mir geht es gut, danke.' },
-    { id: 15, sender: 'Friend', message: 'Was machst du heute Abend?' },
-    { id: 16, sender: 'Me', message: 'Ich habe keine konkreten Pläne. Was schlägst du vor?' },
-    { id: 17, sender: 'Friend', message: 'Vielleicht könnten wir zusammen essen gehen?' },
-    { id: 18, sender: 'Me', message: 'Klingt gut! Hast du einen bestimmten Ort im Sinn?' },
-    { id: 19, sender: 'Friend', message: 'Wie wäre es mit dem neuen Restaurant in der Innenstadt?' },
-    { id: 20, sender: 'Me', message: 'Perfekt! Um welche Uhrzeit?' },
-    { id: 21, sender: 'Friend', message: '19 Uhr passt mir gut. Wie sieht es bei dir aus?' },
-    { id: 22, sender: 'Me', message: 'Das passt auch für mich. Wir sehen uns dort!' },
-    { id: 23, sender: 'Friend', message: 'Super! Freue mich darauf.' },
-    { id: 24, sender: 'Me', message: 'Ich auch! Bis später!' },
-];
-
 const ChatPage = () => {
+    const [exampleMessages, setExampleMessages] = useState([
+        { id: 1, sender: 'Friend', message: 'Hallo, wie geht es dir?' },
+        { id: 2, sender: 'Me', message: 'Hallo! Mir geht es gut, danke.' },
+        { id: 3, sender: 'Friend', message: 'Was machst du heute Abend?' },
+        { id: 4, sender: 'Me', message: 'Ich habe keine konkreten Pläne. Was schlägst du vor?' },
+        { id: 5, sender: 'Friend', message: 'Vielleicht könnten wir zusammen essen gehen?' },
+        { id: 6, sender: 'Me', message: 'Klingt gut! Hast du einen bestimmten Ort im Sinn?' },
+        { id: 7, sender: 'Friend', message: 'Wie wäre es mit dem neuen Restaurant in der Innenstadt?' },
+        { id: 8, sender: 'Me', message: 'Perfekt! Um welche Uhrzeit?' },
+        { id: 9, sender: 'Friend', message: '19 Uhr passt mir gut. Wie sieht es bei dir aus?' },
+        { id: 10, sender: 'Me', message: 'Das passt auch für mich. Wir sehen uns dort!' },
+        { id: 11, sender: 'Friend', message: 'Super! Freue mich darauf.' },
+        { id: 12, sender: 'Me', message: 'Ich auch! Bis später!' },
+        { id: 13, sender: 'Friend', message: 'Hallo, wie geht es dir?' },
+        { id: 14, sender: 'Me', message: 'Hallo! Mir geht es gut, danke.' },
+        { id: 15, sender: 'Friend', message: 'Was machst du heute Abend?' },
+        { id: 16, sender: 'Me', message: 'Ich habe keine konkreten Pläne. Was schlägst du vor?' },
+        { id: 17, sender: 'Friend', message: 'Vielleicht könnten wir zusammen essen gehen?' },
+        { id: 18, sender: 'Me', message: 'Klingt gut! Hast du einen bestimmten Ort im Sinn?' },
+        { id: 19, sender: 'Friend', message: 'Wie wäre es mit dem neuen Restaurant in der Innenstadt?' },
+        { id: 20, sender: 'Me', message: 'Perfekt! Um welche Uhrzeit?' },
+        { id: 21, sender: 'Friend', message: '19 Uhr passt mir gut. Wie sieht es bei dir aus?' },
+        { id: 22, sender: 'Me', message: 'Das passt auch für mich. Wir sehen uns dort!' },
+        { id: 23, sender: 'Friend', message: 'Super! Freue mich darauf.' },
+        { id: 24, sender: 'Me', message: 'Ich auch! Bis später!' },
+    ]);
     const navigation = useNavigation();
     const route = useRoute();
     const { chatId, chatName } = route.params;
@@ -59,8 +58,19 @@ const ChatPage = () => {
     );
 
     const sendMessage = () => {
-        console.log('Nachricht senden:', inputMessage);
-        setInputMessage('');
+        if (inputMessage.trim() !== '') {
+            const newMessage = {
+                id: exampleMessages.length + 1,
+                sender: 'Me',
+                message: inputMessage,
+            };
+
+            // Update the exampleMessages state
+            setExampleMessages((prevMessages) => [...prevMessages, newMessage]);
+
+            // Clear the input field
+            setInputMessage('');
+        }
     };
 
     useEffect(() => {
