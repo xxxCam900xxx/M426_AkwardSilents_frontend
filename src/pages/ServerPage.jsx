@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/core";
 
 const servers = [];
@@ -71,20 +71,27 @@ export default function ServerPage() {
             <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <Text style={{ color: 'black', fontSize: 24 }}>Add Server</Text>
-                        <Text>Enter Server IP-Address:</Text>
-                        <TextInput
-                            style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10, padding: 8 }}
-                            placeholder="Type something..."
-                            value={url}
-                            onChangeText={handleInputChange}
-                        />
-                        <TouchableOpacity onPress={() => { ServerPing(); toggleModal(); }}>
-                            <Text style={{ color: 'blue', fontSize: 18, marginTop: 10 }}>Submit</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={toggleModal}>
-                            <Text style={{ color: 'blue', fontSize: 18, marginTop: 10 }}>Close</Text>
-                        </TouchableOpacity>
+                        <Text style={{ color: '#DFDFDF', fontSize: 24 }}>Add Server</Text>
+
+                        <View style={{ alignItems: 'center', height: '34%' }}>
+                            <Text style={{ color: '#DFDFDF', fontSize: 17, margin: 10 }}>Enter Server IP-Address:</Text>
+                            <TextInput
+                                style={styles.searchInput}
+                                placeholder="Type something..."
+                                value={url}
+                                onChangeText={handleInputChange}
+                            />
+                        </View>
+
+                        <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between', alignItems: 'center' }}>
+                            <TouchableOpacity style={styles.addButton} onPress={() => { ServerPing(); toggleModal(); }}>
+                                <MaterialIcons name="add" size={24} color="white" />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={toggleModal}>
+                                <FontAwesome name="close" size={34} color="red" />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -101,8 +108,27 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: '#232D3F',
         padding: 50,
         borderRadius: 10,
+        width: '80%',
+        height: '40%',
+        marginVertical: 68,
+    },
+    searchInput: {
+        flex: 1,
+        height: 40,
+        borderColor: 'white',
+        borderWidth: 1,
+        backgroundColor: 'white',
+        marginLeft: 10,
+        paddingLeft: 10,
+        color: 'black',
+    },
+    addButton: {
+        backgroundColor: '#005B41',
+        padding: 10,
+        borderRadius: 50,
+        marginRight: 10,
     },
 });
