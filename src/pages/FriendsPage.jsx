@@ -85,22 +85,21 @@ function FriendsPage() {
         { id: newContact.id, name: newContact.name, lastMessage: '', time: '' },
         ...prevChats,
       ]);
-      setAddedContacts((prevAddedContacts) => [
-        { id: newContact.id, name: newContact.name },
-        ...prevAddedContacts,
-      ]);
       setAvailableContacts((prevContacts) => prevContacts.filter((contact) => contact.id !== contactId));
     }
     toggleModal();
+    navigation.navigate('ChatPage', { chatId: newContact.id, chatName: newContact.name });
   };
 
   const removeContact = (contactId) => {
-    const removedContact = addedContacts.find((contact) => contact.id === contactId);
-    if (removedContact) {
+    const removedContactIndex = recentChats.findIndex((chat) => chat.id === contactId);
+    if (removedContactIndex !== -1) {
       console.log(`Kontakt mit der ID ${contactId} entfernt.`);
-      setRecentChats((prevChats) => prevChats.filter((chat) => chat.id !== contactId));
-      setAvailableContacts((prevContacts) => [...prevContacts, removedContact]);
-      setAddedContacts((prevAddedContacts) => prevAddedContacts.filter((contact) => contact.id !== contactId));
+      setRecentChats((prevChats) => [...prevChats.slice(0, removedContactIndex), ...prevChats.slice(removedContactIndex + 1)]);
+      setAvailableContacts((prevContacts) => [
+        ...prevContacts,
+        { id: contactId, name: recentChats[removedContactIndex].name },
+      ]);
     }
   };
 
@@ -126,7 +125,10 @@ function FriendsPage() {
         data={filterChats(recentChats)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('ChatPage', { chatId: item.id, chatName: item.name })}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ChatPage', { chatId: item.id, chatName: item.name })}
+            onLongPress={() => removeContact(item.id)}
+          >
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 17, borderBottomWidth: 1, borderColor: 'white' }}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: 'white', fontSize: 18 }}>{item.name}</Text>
@@ -161,18 +163,6 @@ function FriendsPage() {
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => addContact(item.id)}>
-                  <Text style={{ color: '#DFDFDF', fontSize: 18, paddingTop: 17 }}>{item.name}</Text>
-                </TouchableOpacity>
-              )}
-            />
-
-            <Text style={{ color: '#DFDFDF', fontSize: 24, marginTop: 20 }}>Added Contacts</Text>
-
-            <FlatList
-              data={addedContacts}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => removeContact(item.id)}>
                   <Text style={{ color: '#DFDFDF', fontSize: 18, paddingTop: 17 }}>{item.name}</Text>
                 </TouchableOpacity>
               )}
