@@ -71,7 +71,7 @@ const RegisterPage = () => {
     } catch (error) {
       console.error('Error saving user data:', error);
     }
-    navigation.navigate('Navbar');
+    navigation.navigate('HomePage');
   };
 
   const handleCloseModal = () => {
