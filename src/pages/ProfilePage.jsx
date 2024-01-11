@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, Modal, TextInput, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { Text, View, TouchableOpacity, Modal, TextInput, Alert, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/core';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -11,6 +11,7 @@ function ProfilePage() {
         userName: userProfile.userName,
         hobbies: userProfile.hobbies,
         phoneNumber: userProfile.phoneNumber,
+        profileImage: userProfile.profileImage,
     });
     const navigation = useNavigation();
 
@@ -35,6 +36,7 @@ function ProfilePage() {
             userName: userProfile.userName,
             hobbies: userProfile.hobbies,
             phoneNumber: userProfile.phoneNumber,
+            profileImage: userProfile.profileImage,
         });
         setIsEditing(true);
     };
@@ -93,6 +95,13 @@ function ProfilePage() {
                     <Icon name="trash" size={24} color="white" style={{ marginLeft: 17 }} onPress={() => handleDeleteAccount()} />
                 </View>
             </View>
+
+            {userProfile.profileImage && (
+                <View style={{ marginBottom: 10 }}>
+                    <Text style={{ color: 'white', fontSize: 18 }}>Profile Image</Text>
+                    <Image source={{ uri: userProfile.profileImage }} style={{ width: 100, height: 100, borderRadius: 50 }} />
+                </View>
+            )}
 
             <View style={{ marginBottom: 10 }}>
                 <Text style={{ color: 'white', fontSize: 18 }}>Username</Text>
