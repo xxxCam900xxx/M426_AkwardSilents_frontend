@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, FlatList, Image, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import * as SecureStore from 'expo-secure-store';
+import * as ImagePicker from 'expo-image-picker';
 
 const countries = [
   { code: '+40', name: 'Rumänien', flag: require('../Pictures/flaggen/Flag_of_Romania.svg.webp') },
@@ -45,6 +46,21 @@ const RegisterPage = () => {
   const [hobbies, setHobbies] = useState('');
   const [selectedCountry, setSelectedCountry] = useState(countries[0]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [3, 3],
+      quality: 1,
+    });
+    console.log(result);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const handleCountryCodePress = () => {
     setModalVisible(true);
@@ -60,18 +76,31 @@ const RegisterPage = () => {
       return;
     }
 
+    let imageBase64 = null;
+    if (image) {
+      const imageResponse = await fetch(image);
+      const imageBlob = await imageResponse.blob();
+      imageBase64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(imageBlob);
+      });
+    }
+
     const registrationData = {
       phoneNumber,
       userName,
       hobbies,
       country: selectedCountry,
+      profileImage: imageBase64,
     };
     try {
       await SecureStore.setItemAsync('userData', JSON.stringify(registrationData));
     } catch (error) {
       console.error('Error saving user data:', error);
     }
-    navigation.navigate('HomePage');
+    navigation.navigate('Navbar');
   };
 
   const handleCloseModal = () => {
@@ -112,6 +141,11 @@ const RegisterPage = () => {
 
       <CountryPickerModal visible={modalVisible} onSelect={handleCountrySelect} onClose={handleCloseModal} />
 
+      <View style={{ alignItems: 'center', justifyContent: 'center', margin: 17 }}>
+        <Button title="Pick Your Profile Picuture" onPress={pickImage} style={{ color: 'green' }} />
+        {image && <Image source={{ uri: image }} style={{ width: 170, height: 170, borderRadius: 100, overflow: 'hidden' }} />}
+      </View>
+
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Registrieren</Text>
       </TouchableOpacity>
@@ -141,7 +175,6 @@ const styles = StyleSheet.create({
   phoneInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
   },
   countryCodePicker: {
     backgroundColor: 'gray',
@@ -172,7 +205,7 @@ const styles = StyleSheet.create({
     color: 'black', // Text color
   },
   button: {
-    backgroundColor: '#006400',
+    backgroundColor: '#005B41',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
