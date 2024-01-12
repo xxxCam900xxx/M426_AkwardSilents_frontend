@@ -8,7 +8,14 @@ export default function ServerPage() {
     const [url, setUrl] = useState('');
     const [serverReachable, setServerReachable] = useState(false);
     const navigation = useNavigation();
-    const [servers, setServers] = useState([]);
+    const [servers, setServers] = useState([
+        { id: '1', ip: 'digitec.ch' },
+        { id: '2', ip: 'brack.ch' },
+        { id: '3', ip: '192.168.1.1' },
+        { id: '4', ip: '192.168.1.2' },
+    ]);
+    const [search, setSearch] = useState('');
+    const [filteredServers, setFilteredServers] = useState(servers);
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
@@ -58,6 +65,14 @@ export default function ServerPage() {
         return Math.random().toString(36).substring(7);
     };
 
+    useEffect(() => {
+        setFilteredServers(
+            servers.filter(server =>
+                server.ip.toLowerCase().includes(search.toLowerCase())
+            )
+        );
+    }, [search, servers]);
+
     return (
         <View style={{ flex: 1, backgroundColor: '#232D3F' }}>
             {/* Header mit Titel und Add Contact Button */}
@@ -68,16 +83,24 @@ export default function ServerPage() {
                 </TouchableOpacity>
             </View>
 
+            {/* Search Bar */}
+            <TextInput
+                style={styles.searchServer}
+                placeholder="Search..."
+                value={search}
+                onChangeText={setSearch}
+            />
+
             {/* Server-Liste */}
             <FlatList
-                data={servers}
+                data={filteredServers}
                 keyExtractor={(item) => item.ip}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         onPress={() => navigation.navigate('FriendsPage', { ip: item.ip })}
                         onLongPress={() => removeServer(item.id)}
                     >
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderColor: 'white' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 17, borderBottomWidth: 1, borderColor: 'white' }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={{ color: 'white', fontSize: 18 }}>{item.ip}</Text>
                             </View>
@@ -148,5 +171,14 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 50,
         marginRight: 10,
+    },
+    searchServer: {
+        height: 40,
+        borderColor: 'white',
+        borderWidth: 1,
+        paddingLeft: 10,
+        color: 'white',
+        backgroundColor: 'white',
+        margin: 10,
     },
 });
