@@ -58,8 +58,6 @@ function FriendsPage() {
   const [availableContacts, setAvailableContacts] = useState(availableContactsData);
   const searchInputRef = useRef(null);
   const route = useRoute();
-  console.log(route)
-  console.log('params:', route.params)
   const { ip } = route.params ?? {};
 
   const toggleModal = () => {

@@ -56,7 +56,6 @@ const RegisterPage = () => {
       aspect: [3, 3],
       quality: 1,
     });
-    console.log(result);
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -100,7 +99,7 @@ const RegisterPage = () => {
     } catch (error) {
       console.error('Error saving user data:', error);
     }
-    navigation.navigate('Navbar');
+    navigation.navigate('HomePage');
   };
 
   const handleCloseModal = () => {
