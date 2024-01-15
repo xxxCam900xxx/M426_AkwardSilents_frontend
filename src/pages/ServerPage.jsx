@@ -122,6 +122,7 @@ export default function ServerPage() {
                                 placeholder="Type something..."
                                 value={url}
                                 onChangeText={handleInputChange}
+                                autoFocus={true}
                             />
                         </View>
 
@@ -130,7 +131,7 @@ export default function ServerPage() {
                                 <MaterialIcons name="add" size={24} color="white" />
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={toggleModal}>
+                            <TouchableOpacity style={styles.deleteButton} onPress={toggleModal}>
                                 <FontAwesome name="close" size={34} color="red" />
                             </TouchableOpacity>
                         </View>
@@ -147,18 +148,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        width: '100%',
+        maxHeight: '100%'
     },
     modalContent: {
         backgroundColor: '#232D3F',
         padding: 50,
         borderRadius: 10,
         width: '80%',
-        height: '40%',
         marginVertical: 68,
     },
     searchInput: {
         flex: 1,
-        height: 40,
+        minHeight: 30,
+        maxHeight: 30,
+        width: '100%',
         borderColor: 'white',
         borderWidth: 1,
         backgroundColor: 'white',
@@ -170,7 +174,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#005B41',
         padding: 10,
         borderRadius: 50,
+        marginTop: 40,
         marginRight: 10,
+    },
+    deleteButton: {
+        marginTop: 40,
     },
     searchServer: {
         height: 40,
