@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, TextInput } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, TextInput, Image } from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 const recentChatsData = [
-  { id: '1', name: 'Alice', lastMessage: 'Wie geht es dir?', time: '10:30 AM' },
+  { id: '1', name: 'Alice', lastMessage: 'Wie geht es dir?', time: '10:30 AM'},
   { id: '2', name: 'Bob', lastMessage: 'Wollen wir heute Abend ausgehen?', time: '11:45 AM' },
   { id: '3', name: 'Charlie', lastMessage: 'Ich freue mich auf das Wochenende!', time: '01:20 PM' },
   { id: '4', name: 'David', lastMessage: 'Hast du meine E-Mail erhalten?', time: '02:15 PM' },
@@ -126,7 +126,7 @@ function FriendsPage() {
         onChangeText={(text) => setSearchQuery(text)}
       />
 
-      <FlatList
+<FlatList
         data={filterChats(recentChats)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -135,9 +135,12 @@ function FriendsPage() {
             onLongPress={() => removeContact(item.id)}
           >
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 17, borderBottomWidth: 1, borderColor: 'white' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: 'white', fontSize: 18 }}>{item.name}</Text>
-                <Text style={{ color: 'white', fontSize: 14, marginLeft: 10 }}>{item.lastMessage}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image source={{ uri: 'https://media.istockphoto.com/id/1297706369/de/vektor/sun-paint-pinselstriche-auf-wei%C3%9Fem-hintergrund-vektor-illustration.jpg?s=612x612&w=0&k=20&c=Yki5C4KezlebprhbW1xaaDJb1iTBHdusoF5Jz4ecaPg=' }} style={styles.profileImage} />
+                <View style={{ flexDirection: 'column', marginLeft: 10 }}>
+                  <Text style={{ color: 'white', fontSize: 18 }}>{item.name}</Text>
+                  <Text style={{ color: 'white', fontSize: 14 }}>{item.lastMessage}</Text>
+                </View>
               </View>
               <Text style={{ color: 'white', fontSize: 14 }}>{item.time}</Text>
             </View>
@@ -206,6 +209,11 @@ const styles = StyleSheet.create({
     margin: 10,
     paddingLeft: 10,
     color: 'black',
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
 });
 
