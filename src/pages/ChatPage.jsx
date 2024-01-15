@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { format, isSameDay } from 'date-fns';
+import { de } from 'date-fns/locale';
 import {
     View,
     Text,
@@ -14,30 +16,16 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 const ChatPage = () => {
     const [exampleMessages, setExampleMessages] = useState([
-        { id: 1, sender: 'Friend', message: 'Hallo, wie geht es dir?' },
-        { id: 2, sender: 'Me', message: 'Hallo! Mir geht es gut, danke.' },
-        { id: 3, sender: 'Friend', message: 'Was machst du heute Abend?' },
-        { id: 4, sender: 'Me', message: 'Ich habe keine konkreten Pläne. Was schlägst du vor?' },
-        { id: 5, sender: 'Friend', message: 'Vielleicht könnten wir zusammen essen gehen?' },
-        { id: 6, sender: 'Me', message: 'Klingt gut! Hast du einen bestimmten Ort im Sinn?' },
-        { id: 7, sender: 'Friend', message: 'Wie wäre es mit dem neuen Restaurant in der Innenstadt?' },
-        { id: 8, sender: 'Me', message: 'Perfekt! Um welche Uhrzeit?' },
-        { id: 9, sender: 'Friend', message: '19 Uhr passt mir gut. Wie sieht es bei dir aus?' },
-        { id: 10, sender: 'Me', message: 'Das passt auch für mich. Wir sehen uns dort!' },
-        { id: 11, sender: 'Friend', message: 'Super! Freue mich darauf.' },
-        { id: 12, sender: 'Me', message: 'Ich auch! Bis später!' },
-        { id: 13, sender: 'Friend', message: 'Hallo, wie geht es dir?' },
-        { id: 14, sender: 'Me', message: 'Hallo! Mir geht es gut, danke.' },
-        { id: 15, sender: 'Friend', message: 'Was machst du heute Abend?' },
-        { id: 16, sender: 'Me', message: 'Ich habe keine konkreten Pläne. Was schlägst du vor?' },
-        { id: 17, sender: 'Friend', message: 'Vielleicht könnten wir zusammen essen gehen?' },
-        { id: 18, sender: 'Me', message: 'Klingt gut! Hast du einen bestimmten Ort im Sinn?' },
-        { id: 19, sender: 'Friend', message: 'Wie wäre es mit dem neuen Restaurant in der Innenstadt?' },
-        { id: 20, sender: 'Me', message: 'Perfekt! Um welche Uhrzeit?' },
-        { id: 21, sender: 'Friend', message: '19 Uhr passt mir gut. Wie sieht es bei dir aus?' },
-        { id: 22, sender: 'Me', message: 'Das passt auch für mich. Wir sehen uns dort!' },
-        { id: 23, sender: 'Friend', message: 'Super! Freue mich darauf.' },
-        { id: 24, sender: 'Me', message: 'Ich auch! Bis später!' },
+        { id: 1, sender: 'Friend', message: 'Hallo, wie geht es dir?', timestamp: new Date(2022, 1, 1, 9, 0) },
+        { id: 2, sender: 'Me', message: 'Hallo! Mir geht es gut, danke.', timestamp: new Date(2022, 1, 1, 9, 15) },
+        { id: 3, sender: 'Friend', message: 'Was machst du heute Abend?', timestamp: new Date(2022, 1, 2, 12, 30) },
+        { id: 4, sender: 'Me', message: 'Ich habe keine konkreten Pläne. Was schlägst du vor?', timestamp: new Date(2022, 1, 2, 14, 45) },
+        { id: 5, sender: 'Friend', message: 'Vielleicht könnten wir zusammen essen gehen?', timestamp: new Date(2022, 1, 3, 19, 0) },
+        { id: 6, sender: 'Me', message: 'Klingt gut! Hast du einen bestimmten Ort im Sinn?', timestamp: new Date(2022, 1, 3, 19, 30) },
+        { id: 7, sender: 'Friend', message: 'Wie wäre es mit dem neuen Restaurant in der Innenstadt?', timestamp: new Date(2022, 1, 4, 8, 45) },
+        { id: 8, sender: 'Me', message: 'Perfekt! Um welche Uhrzeit?', timestamp: new Date(2022, 1, 4, 9, 15) },
+        { id: 9, sender: 'Friend', message: '19 Uhr passt mir gut. Wie sieht es bei dir aus?', timestamp: new Date(2022, 1, 4, 9, 30) },
+        { id: 10, sender: 'Me', message: 'Das passt auch für mich. Wir sehen uns dort!', timestamp: new Date(2022, 1, 4, 10, 0) },
     ]);
     const navigation = useNavigation();
     const route = useRoute();
@@ -50,11 +38,27 @@ const ChatPage = () => {
         flatListRef.current = ref;
     };
 
-    const renderMessage = ({ item }) => (
-        <View style={item.sender === 'Me' ? styles.myMessage : styles.friendMessage}>
-            <Text style={styles.messageText}>{item.message}</Text>
-        </View>
-    );
+    const renderMessage = ({ item, index }) => {
+        const showDate = index === 0 || !isSameDay(new Date(item.timestamp), new Date(exampleMessages[index - 1].timestamp));
+
+        return (
+            <View>
+                {showDate && (
+                    <Text style={styles.dateText}>
+                        {format(new Date(item.timestamp), 'dd.MMMM.yyyy', { locale: de })}
+                    </Text>
+                )}
+                <View style={item.sender === 'Me' ? styles.myMessage : styles.friendMessage}>
+                    <View>
+                        <Text style={styles.messageText}>{item.message}</Text>
+                        <Text style={item.sender === 'Me' ? styles.myTimestamp : styles.friendTimestamp}>
+                            {format(new Date(item.timestamp), 'HH:mm')}
+                        </Text>
+                    </View>
+                </View>
+            </View>
+        );
+    };
 
     const sendMessage = () => {
         if (inputMessage.trim() !== '') {
@@ -62,6 +66,7 @@ const ChatPage = () => {
                 id: exampleMessages.length + 1,
                 sender: 'Me',
                 message: inputMessage,
+                timestamp: format(new Date(), 'HH:mm dd.MMMM.yyyy'),
             };
 
             // Update the exampleMessages state
@@ -175,6 +180,22 @@ const styles = StyleSheet.create({
     },
     sendIcon: {
         color: '#005B41',
+    },
+    myTimestamp: {
+        alignSelf: 'flex-end',
+        color: '#888888',
+        marginRight: 5,
+    },
+    friendTimestamp: {
+        alignSelf: 'flex-start',
+        color: '#888888',
+        marginLeft: 5,
+    },
+    dateText: {
+        fontSize: 14,
+        color: '#888888',
+        alignSelf: 'center',
+        marginVertical: 5,
     },
 });
 
