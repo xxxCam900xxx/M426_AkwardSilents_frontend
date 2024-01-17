@@ -2,28 +2,29 @@ import React, { useState, useRef } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, TextInput, Image } from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { format } from 'date-fns';
 
 const recentChatsData = [
-  { id: '1', name: 'Alice', lastMessage: 'Wie geht es dir?', time: '10:30 AM' },
-  { id: '2', name: 'Bob', lastMessage: 'Wollen wir heute Abend ausgehen?', time: '11:45 AM' },
-  { id: '3', name: 'Charlie', lastMessage: 'Ich freue mich auf das Wochenende!', time: '01:20 PM' },
-  { id: '4', name: 'David', lastMessage: 'Hast du meine E-Mail erhalten?', time: '02:15 PM' },
-  { id: '5', name: 'Eva', lastMessage: 'Lass uns morgen frühstücken gehen.', time: '03:05 PM' },
-  { id: '6', name: 'Frank', lastMessage: 'Wie war dein Tag?', time: '04:40 PM' },
-  { id: '7', name: 'Grace', lastMessage: 'Ich vermisse dich!', time: '05:55 PM' },
-  { id: '8', name: 'Henry', lastMessage: 'Hast du die Hausaufgaben gemacht?', time: '06:30 PM' },
-  { id: '9', name: 'Ivy', lastMessage: 'Bereit für das Wochenende?', time: '07:20 PM' },
-  { id: '10', name: 'Jack', lastMessage: 'Welchen Film sollen wir sehen?', time: '08:10 PM' },
-  { id: '11', name: 'Katie', lastMessage: 'Ich komme etwas später.', time: '09:05 PM' },
-  { id: '12', name: 'Leo', lastMessage: 'Hast du das Buch gelesen?', time: '10:15 PM' },
-  { id: '13', name: 'Mia', lastMessage: 'Freust du dich auf das Wochenende?', time: '11:30 PM' },
-  { id: '14', name: 'Noah', lastMessage: 'Hast du das Essen vorbereitet?', time: '12:45 AM' },
-  { id: '15', name: 'Olivia', lastMessage: 'Lass uns morgen spazieren gehen.', time: '01:55 AM' },
-  { id: '16', name: 'Peter', lastMessage: 'Wie war das Treffen?', time: '02:40 AM' },
-  { id: '17', name: 'Quinn', lastMessage: 'Bist du bereit für die Präsentation?', time: '03:25 AM' },
-  { id: '18', name: 'Rachel', lastMessage: 'Hast du meine Nachricht erhalten?', time: '04:15 AM' },
-  { id: '19', name: 'Sam', lastMessage: 'Wie war dein Wochenende?', time: '05:30 AM' },
-  { id: '20', name: 'Tom', lastMessage: 'Wann treffen wir uns?', time: '06:20 AM' },
+  { id: '1', name: 'Alice', lastMessage: 'Wie geht es dir?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '2', name: 'Bob', lastMessage: 'Wollen wir heute Abend ausgehen?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '3', name: 'Charlie', lastMessage: 'Ich freue mich auf das Wochenende!', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '4', name: 'David', lastMessage: 'Hast du meine E-Mail erhalten?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '5', name: 'Eva', lastMessage: 'Lass uns morgen frühstücken gehen.', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '6', name: 'Frank', lastMessage: 'Wie war dein Tag?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '7', name: 'Grace', lastMessage: 'Ich vermisse dich!', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '8', name: 'Henry', lastMessage: 'Hast du die Hausaufgaben gemacht?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '9', name: 'Ivy', lastMessage: 'Bereit für das Wochenende?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '10', name: 'Jack', lastMessage: 'Welchen Film sollen wir sehen?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '11', name: 'Katie', lastMessage: 'Ich komme etwas später.', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '12', name: 'Leo', lastMessage: 'Hast du das Buch gelesen?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '13', name: 'Mia', lastMessage: 'Freust du dich auf das Wochenende?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '14', name: 'Noah', lastMessage: 'Hast du das Essen vorbereitet?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '15', name: 'Olivia', lastMessage: 'Lass uns morgen spazieren gehen.', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '16', name: 'Peter', lastMessage: 'Wie war das Treffen?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '17', name: 'Quinn', lastMessage: 'Bist du bereit für die Präsentation?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '18', name: 'Rachel', lastMessage: 'Hast du meine Nachricht erhalten?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '19', name: 'Sam', lastMessage: 'Wie war dein Wochenende?', time: new Date(2024, 12, 31, 24, 59) },
+  { id: '20', name: 'Tom', lastMessage: 'Wann treffen wir uns?', time: new Date(2024, 12, 31, 24, 59) },
 ];
 
 const availableContactsData = [
@@ -83,7 +84,7 @@ function FriendsPage() {
     if (newContact) {
       console.log(`Kontakt mit der ID ${contactId} hinzugefügt.`);
       setRecentChats((prevChats) => [
-        { id: newContact.id, name: newContact.name, lastMessage: '', time: '' },
+        { id: newContact.id, name: newContact.name, lastMessage: '', time: new Date(), },
         ...prevChats,
       ]);
       setAvailableContacts((prevContacts) => prevContacts.filter((contact) => contact.id !== contactId));
@@ -142,7 +143,7 @@ function FriendsPage() {
                   <Text style={{ color: 'white', fontSize: 14 }}>{item.lastMessage}</Text>
                 </View>
               </View>
-              <Text style={{ color: 'white', fontSize: 14 }}>{item.time}</Text>
+              <Text style={{ color: 'white', fontSize: 14 }}>{format(new Date(item.time), 'HH:mm')}</Text>
             </View>
           </TouchableOpacity>
         )}

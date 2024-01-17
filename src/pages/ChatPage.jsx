@@ -68,7 +68,7 @@ const ChatPage = ({ userProfile }) => {
         id: exampleMessages.length + 1,
         sender: 'Me',
         message: inputMessage,
-        timestamp: format(new Date(), 'HH:mm dd.MMMM.yyyy'),
+        timestamp: new Date(),
       };
 
       // Update the exampleMessages state
