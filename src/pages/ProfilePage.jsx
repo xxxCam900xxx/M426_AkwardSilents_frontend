@@ -109,7 +109,6 @@ function ProfilePage() {
 
         // Save updated data to SecureStore
         try {
-            console.log(updatedProfile)
             await SecureStore.setItemAsync('userData', JSON.stringify(updatedProfile));
         } catch (error) {
             console.error('Error saving user data:', error);
