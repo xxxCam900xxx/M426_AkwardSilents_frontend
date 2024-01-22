@@ -10,10 +10,11 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Image,
+  Image, ImageBackground,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import * as SecureStore from "expo-secure-store";
 
 const ChatPage = ({ userProfile }) => {
   const [exampleMessages, setExampleMessages] = useState([
@@ -34,6 +35,23 @@ const ChatPage = ({ userProfile }) => {
 
   const [inputMessage, setInputMessage] = useState('');
   const flatListRef = useRef(null);
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const storedData = await SecureStore.getItemAsync('userData');
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+          setUserData(parsedData);
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    };
+
+    loadUserData();
+  }, []);
 
   const setFlatListRef = (ref) => {
     flatListRef.current = ref;
@@ -88,7 +106,7 @@ const ChatPage = ({ userProfile }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <View style={styles.container}>
+      <ImageBackground source={{uri: (userData.backgroundImage ?? 'https://color-hex.org/colors/232d3f.png')}} style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -119,7 +137,7 @@ const ChatPage = ({ userProfile }) => {
             <Ionicons name="paper-plane" size={34} style={styles.sendIcon} />
           </TouchableOpacity>
         </View>
-      </View>
+      </ImageBackground>
     </KeyboardAvoidingView>
   );
 };
