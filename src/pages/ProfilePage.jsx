@@ -3,15 +3,17 @@ import { Text, View, TouchableOpacity, Modal, TextInput, Alert, KeyboardAvoiding
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/core';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import * as ImagePicker from "expo-image-picker";
 
 function ProfilePage() {
     const [userProfile, setUserProfile] = useState({});
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState();
     const [editedValue, setEditedValue] = useState({
         userName: userProfile.userName,
         hobbies: userProfile.hobbies,
         phoneNumber: userProfile.phoneNumber,
         profileImage: userProfile.profileImage,
+        backgroundImage: userProfile.backgroundImage
     });
     const navigation = useNavigation();
 
@@ -37,21 +39,84 @@ function ProfilePage() {
             hobbies: userProfile.hobbies,
             phoneNumber: userProfile.phoneNumber,
             profileImage: userProfile.profileImage,
+            backgroundImage: userProfile.backgroundImage
         });
         setIsEditing(true);
     };
 
+
+    const pickBackgoundImage = async () => {
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [3, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const selectedImageUri = result.assets[0].uri;
+            setEditedValue({ ...editedValue, backgroundImage: selectedImageUri });
+        }
+    };
+
+    const pickProfileImage = async () => {
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [3, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const selectedImageUri = result.assets[0].uri;
+            setEditedValue({ ...editedValue, profileImage: selectedImageUri });
+        }
+    };
+
+
     const handleSavePress = async () => {
+
+        let profileImageBase64 = null;
+        let backgroundImageBase64 = null;
+
+        if (editedValue.backgroundImage && editedValue.profileImage) {
+            const profileImageResponse = await fetch(editedValue.profileImage);
+            const profileImageBlob = await profileImageResponse.blob();
+            profileImageBase64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(profileImageBlob);
+            });
+
+            const backgroundImageResponse = await fetch(editedValue.backgroundImage);
+            const backgroundImageBlob = await backgroundImageResponse.blob();
+            backgroundImageBase64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(backgroundImageBlob);
+            });
+        }
+        setEditedValue({ ...editedValue, backgroundImage: backgroundImageBase64 });
+        setEditedValue({ ...editedValue, profileImage: profileImageBase64 });
+
         const updatedProfile = { ...userProfile, ...editedValue }; // Hier werden die bearbeiteten Werte hinzugefügt
+
         setUserProfile(updatedProfile);
-        setIsEditing(false);
 
         // Save updated data to SecureStore
         try {
+            console.log(updatedProfile)
             await SecureStore.setItemAsync('userData', JSON.stringify(updatedProfile));
         } catch (error) {
             console.error('Error saving user data:', error);
         }
+
+        setIsEditing(false);
+
     };
 
     const handleCancelPress = () => {
@@ -103,6 +168,13 @@ function ProfilePage() {
                 </View>
             )}
 
+            {userProfile.profileImage && (
+                <View style={{ marginBottom: 10 }}>
+                    <Text style={{ color: 'white', fontSize: 18 }}>Background Image</Text>
+                    <Image source={{ uri: userProfile.backgroundImage }} style={{ width: 100, height: 100, borderRadius: 5 }} />
+                </View>
+            )}
+
             <View style={{ marginBottom: 10 }}>
                 <Text style={{ color: 'white', fontSize: 18 }}>Username</Text>
                 <Text style={{ color: 'white', fontSize: 14 }}>{userProfile.userName}</Text>
@@ -142,6 +214,28 @@ function ProfilePage() {
                                 onChangeText={(text) => setEditedValue({ ...editedValue, phoneNumber: text })}
                                 keyboardType="numeric"
                             />
+
+                            {/* TODO */}
+                            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: 5}}>
+                                <View>
+                                    <Text>Background:</Text>
+                                    <View style={{ marginBottom: 10 }}>
+                                        <TouchableOpacity onPress={() => pickBackgoundImage()}>
+                                            <Image source={{ uri: (editedValue.backgroundImage) ? (editedValue.backgroundImage) : ((userProfile.backgroundImage) ? (userProfile.backgroundImage) : ('https://static.pixelbar.be/wp-content/uploads/2014/09/blog-pixelbar-foto-platzhalter.jpg'))}} style={{ width: 100, height: 100, borderRadius: 5 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <View>
+                                    <Text>Profile:</Text>
+                                    <View style={{ marginBottom: 10 }}>
+                                        <TouchableOpacity onPress={() => pickProfileImage()}>
+                                            <Image source={{ uri: (editedValue.profileImage) ? (editedValue.profileImage) : ((userProfile.profileImage) ? (userProfile.profileImage) : ('https://static.pixelbar.be/wp-content/uploads/2014/09/blog-pixelbar-foto-platzhalter.jpg'))}} style={{ width: 100, height: 100, borderRadius: 5 }} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+
+
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <TouchableOpacity onPress={handleSavePress} style={{ backgroundColor: '#005B41', padding: 10, borderRadius: 5, flex: 1, marginRight: 10 }}>
                                     <Text style={{ color: 'white', textAlign: 'center' }}>Save</Text>

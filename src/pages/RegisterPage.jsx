@@ -142,6 +142,7 @@ const RegisterPage = () => {
 
       <View style={{ alignItems: 'center', justifyContent: 'center', margin: 17 }}>
         <Button title="Pick Your Profile Picuture" onPress={pickImage} style={{ color: 'green' }} />
+        {console.log(image)}
         {image && <Image source={{ uri: image }} style={{ width: 170, height: 170, borderRadius: 100, overflow: 'hidden' }} />}
       </View>
 
