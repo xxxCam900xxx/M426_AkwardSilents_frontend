@@ -7,7 +7,7 @@ import * as ImagePicker from "expo-image-picker";
 
 function ProfilePage() {
     const [userProfile, setUserProfile] = useState({});
-    const [isEditing, setIsEditing] = useState();
+    const [isEditing, setIsEditing] = useState(false);
     const [editedValue, setEditedValue] = useState({
         userName: userProfile.userName,
         hobbies: userProfile.hobbies,
@@ -168,7 +168,7 @@ function ProfilePage() {
                 </View>
             )}
 
-            {userProfile.profileImage && (
+            {userProfile.backgroundImage && (
                 <View style={{ marginBottom: 10 }}>
                     <Text style={{ color: 'white', fontSize: 18 }}>Background Image</Text>
                     <Image source={{ uri: userProfile.backgroundImage }} style={{ width: 100, height: 100, borderRadius: 5 }} />
