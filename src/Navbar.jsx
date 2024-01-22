@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator()
 const Navbar = () => {
     return (
         <Tab.Navigator
-            initialRouteName="FriendsPage"
+            initialRouteName="ServerPage"
             screenOptions={{
                 tabBarShowLabel: false,
                 tabBarActiveTintColor: "green",
