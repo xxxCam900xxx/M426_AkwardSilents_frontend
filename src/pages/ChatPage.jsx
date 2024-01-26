@@ -15,6 +15,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import * as SecureStore from "expo-secure-store";
+import uuid from 'react-native-uuid';
 
 const ChatPage = ({ userProfile }) => {
   const [exampleMessages, setExampleMessages] = useState([
@@ -32,10 +33,36 @@ const ChatPage = ({ userProfile }) => {
   const navigation = useNavigation();
   const route = useRoute();
   const { chatName } = route.params;
-
+  const [socket, setSocket] = useState(null);
   const [inputMessage, setInputMessage] = useState('');
   const flatListRef = useRef(null);
   const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const socketConnection = new WebSocket('ws://10.40.16.39:3001/chat');
+
+    socketConnection.onmessage = (event) => {
+      console.log("Received from the server: ", event.data);
+      const newMessage = JSON.parse(event.data);
+      setExampleMessages(prevMessages => Array.isArray(prevMessages) ? [...prevMessages, newMessage] : [newMessage]);
+
+    };
+
+    socketConnection.onerror = (error) => {
+      console.log("WebSocket error: ", error);
+    };
+
+    socketConnection.onclose = (event) => {
+      console.log("WebSocket connection closed: ", event);
+    };
+
+    setSocket(socketConnection);
+
+    // Clean up function to close the socket when the component unmounts
+    return () => {
+      socketConnection.close();
+    };
+  }, []);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -81,7 +108,7 @@ const ChatPage = ({ userProfile }) => {
   };
 
   const sendMessage = () => {
-    if (inputMessage.trim() !== '') {
+    if (inputMessage.trim() !== '' && socket) {
       const newMessage = {
         id: exampleMessages.length + 1,
         sender: 'Me',
@@ -89,8 +116,13 @@ const ChatPage = ({ userProfile }) => {
         timestamp: new Date(),
       };
 
+      // Send the message to the server
+      const serverMessage = { 'Typ': 'sendmessage', 'Content': { 'Key': 'hello2', 'Name': 'Niel', 'Message': inputMessage } };
+      socket.send(JSON.stringify(serverMessage));
+
       // Update the exampleMessages state
-      setExampleMessages((prevMessages) => [...prevMessages, newMessage]);
+      setExampleMessages(prevMessages => Array.isArray(prevMessages) ? [...prevMessages, newMessage] : [newMessage]);
+
 
       // Clear the input field
       setInputMessage('');
@@ -106,7 +138,7 @@ const ChatPage = ({ userProfile }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <ImageBackground source={{uri: (userData.backgroundImage ?? 'https://color-hex.org/colors/232d3f.png')}} style={styles.container}>
+      <ImageBackground source={{ uri: (userData.backgroundImage ?? 'https://color-hex.org/colors/232d3f.png') }} style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()}>

@@ -40,22 +40,27 @@ export default function ServerPage() {
         }
 
         try {
-            // Make a HEAD request to the server
-            const response = await fetch(`http://${url}`);
+            const socketConnection = new WebSocket(`ws://${url}:3001/chat`);
+            socketConnection.onopen = () => {
+                console.log("WebSocket connection opened");
+                socketConnection.send("{'Typ':'login','Content': {'Key': 'hello2'}}");
+            };
 
-            // Check if the response is successful (status code 200-299)
-            if (response.ok) {
+            socketConnection.onmessage = (event) => {
+                console.log("Received from the server: ", event.data);
                 setServerReachable(true);
-                console.log('Server is reachable');
-                // Generate a unique ID for the new server
-                const serverId = generateUniqueId(); // You should replace this with your logic
-                // Update the state to add the new server
+                const serverId = generateUniqueId();
                 setServers([...servers, { id: serverId, ip: url }]);
                 navigation.navigate('FriendsPage', { ip: url });
-            } else {
-                console.log('Server returned an error:', response.status, response.statusText);
+            };
+
+            socketConnection.onerror = (error) => {
+                console.log("WebSocket error: ", error);
                 setServerReachable(false);
-            }
+            };
+            socketConnection.onclose = (event) => {
+                console.log("WebSocket connection closed: ", event);
+            };
         } catch (error) {
             console.error('Error during network request:', error);
         }
