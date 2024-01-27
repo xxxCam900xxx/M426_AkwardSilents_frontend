@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, ActivityIndicator } from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/core";
 
@@ -16,6 +16,7 @@ export default function ServerPage() {
     ]);
     const [search, setSearch] = useState('');
     const [filteredServers, setFilteredServers] = useState(servers);
+    const [isLoading, setIsLoading] = useState(false);
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
@@ -34,8 +35,10 @@ export default function ServerPage() {
     };
 
     const ServerPing = async () => {
+        setIsLoading(true);
         if (!url) {
             console.error('URL is empty');
+            setIsLoading(false);
             return;
         }
 
@@ -52,17 +55,22 @@ export default function ServerPage() {
                 const serverId = generateUniqueId();
                 setServers([...servers, { id: serverId, ip: url }]);
                 navigation.navigate('FriendsPage', { ip: url });
+                setIsLoading(false);
             };
 
             socketConnection.onerror = (error) => {
                 console.log("WebSocket error: ", error);
                 setServerReachable(false);
+                Alert.alert('Error', 'WebSocket server is not reachable');
+                setIsLoading(false);
             };
             socketConnection.onclose = (event) => {
                 console.log("WebSocket connection closed: ", event);
+                setIsLoading(false);
             };
         } catch (error) {
             console.error('Error during network request:', error);
+            setIsLoading(false);
         }
     };
 
@@ -96,6 +104,10 @@ export default function ServerPage() {
                 onChangeText={setSearch}
             />
 
+            <View>
+                {isLoading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
+            </View>
+
             {/* Server-Liste */}
             <FlatList
                 data={filteredServers}
@@ -114,7 +126,7 @@ export default function ServerPage() {
                 )}
             />
 
-            {/* Modal Overlay für Personenliste */}
+            {/* Modal Overlay für Serverliste */}
             <Modal animationType="slide" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
