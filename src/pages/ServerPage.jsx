@@ -13,6 +13,7 @@ export default function ServerPage() {
         { id: '2', ip: 'brack.ch' },
         { id: '3', ip: '192.168.1.1' },
         { id: '4', ip: '192.168.1.2' },
+        { id: '5', ip: '192.168.1.109' },
     ]);
     const [search, setSearch] = useState('');
     const [filteredServers, setFilteredServers] = useState(servers);

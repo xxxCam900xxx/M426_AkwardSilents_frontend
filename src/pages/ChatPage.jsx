@@ -37,15 +37,19 @@ const ChatPage = ({ userProfile }) => {
   const [inputMessage, setInputMessage] = useState('');
   const flatListRef = useRef(null);
   const [userData, setUserData] = useState({});
+  const { ip } = route.params;
 
   useEffect(() => {
-    const socketConnection = new WebSocket('ws://10.40.16.39:3001/chat');
+    const socketConnection = new WebSocket(`ws://${ip}:3001/chat`);
+
+    socketConnection.onopen = (event) => {
+      console.log("WebSocket connection opened");
+      socketConnection.send("{'Typ':'login','Content': {'Key': 'hello'}}");
+      console.log("onopen: ", event);
+    };
 
     socketConnection.onmessage = (event) => {
-      console.log("Received from the server: ", event.data);
-      const newMessage = JSON.parse(event.data);
-      setExampleMessages(prevMessages => Array.isArray(prevMessages) ? [...prevMessages, newMessage] : [newMessage]);
-
+      console.log('onmessage', event.data)
     };
 
     socketConnection.onerror = (error) => {
@@ -57,11 +61,6 @@ const ChatPage = ({ userProfile }) => {
     };
 
     setSocket(socketConnection);
-
-    // Clean up function to close the socket when the component unmounts
-    return () => {
-      socketConnection.close();
-    };
   }, []);
 
   useEffect(() => {
@@ -116,13 +115,24 @@ const ChatPage = ({ userProfile }) => {
         timestamp: new Date(),
       };
 
-      // Send the message to the server
-      const serverMessage = { 'Typ': 'sendmessage', 'Content': { 'Key': 'hello2', 'Name': 'Niel', 'Message': inputMessage } };
+      const serverMessage = {
+        Typ: 'sendmessage',
+        Content: {
+          Key: 'hello2',
+          Name: 'Niel',
+          Message: inputMessage
+        }
+      };
       socket.send(JSON.stringify(serverMessage));
 
       // Update the exampleMessages state
-      setExampleMessages(prevMessages => Array.isArray(prevMessages) ? [...prevMessages, newMessage] : [newMessage]);
+      setExampleMessages(prevMessages => {
+        // Stellen Sie sicher, dass prevMessages ein Array ist
+        const messages = Array.isArray(prevMessages) ? prevMessages : [];
 
+        // Fügen Sie die neue Nachricht hinzu
+        return [...messages, newMessage];
+      });
 
       // Clear the input field
       setInputMessage('');

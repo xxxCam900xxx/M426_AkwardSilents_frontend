@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Text, View, FlatList, TouchableOpacity, Modal, StyleSheet, TextInput, Image } from 'react-native';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -60,6 +60,25 @@ function FriendsPage() {
   const searchInputRef = useRef(null);
   const route = useRoute();
   const { ip } = route.params ?? {};
+
+  useEffect(() => {
+    try {
+      const socketConnection = new WebSocket(`ws://${ip}:3001/chat`);
+      socketConnection.onopen = (event) => {
+        console.log("WebSocket connection opened");
+        socketConnection.send("{'Typ':'login','Content': {'Key': 'hello'}}");
+        console.log("Received from the server: ", event);
+      };
+      socketConnection.onmessage = (event) => {
+        console.log("Received from the server: ", event.data);
+        if (event.data === "login success") {
+          socketConnection.send("{'Typ':'getoverview','Content': {}}");
+        }
+      };
+    } catch (error) {
+      console.error('Error during network request:', error);
+    }
+  }, [ip]);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -132,7 +151,7 @@ function FriendsPage() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('ChatPage', { chatId: item.id, chatName: item.name })}
+            onPress={() => navigation.navigate('ChatPage', { chatId: item.id, chatName: item.name, ip })}
             onLongPress={() => removeContact(item.id)}
           >
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 17, borderBottomWidth: 1, borderColor: 'white' }}>
