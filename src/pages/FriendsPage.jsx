@@ -5,50 +5,32 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { format } from 'date-fns';
 
 const recentChatsData = [
-  { id: '1', name: 'Alice', lastMessage: 'Wie geht es dir?', time: new Date(2024, 1, 20, 20, 20) },
-  { id: '2', name: 'Bob', lastMessage: 'Wollen wir heute Abend ausgehen?', time: new Date(2024, 1, 19, 19, 19) },
-  { id: '3', name: 'Charlie', lastMessage: 'Ich freue mich auf das Wochenende!', time: new Date(2024, 1, 18, 18, 18) },
-  { id: '4', name: 'David', lastMessage: 'Hast du meine E-Mail erhalten?', time: new Date(2024, 1, 17, 17, 17) },
-  { id: '5', name: 'Eva', lastMessage: 'Lass uns morgen frühstücken gehen.', time: new Date(2024, 1, 16, 16, 16) },
-  { id: '6', name: 'Frank', lastMessage: 'Wie war dein Tag?', time: new Date(2024, 1, 15, 15, 15) },
-  { id: '7', name: 'Grace', lastMessage: 'Ich vermisse dich!', time: new Date(2024, 1, 14, 14, 14) },
-  { id: '8', name: 'Henry', lastMessage: 'Hast du die Hausaufgaben gemacht?', time: new Date(2024, 1, 13, 13, 13) },
-  { id: '9', name: 'Ivy', lastMessage: 'Bereit für das Wochenende?', time: new Date(2024, 1, 12, 12, 12) },
-  { id: '10', name: 'Jack', lastMessage: 'Welchen Film sollen wir sehen?', time: new Date(2024, 1, 11, 11, 11) },
-  { id: '11', name: 'Katie', lastMessage: 'Ich komme etwas später.', time: new Date(2024, 1, 10, 10, 10) },
-  { id: '12', name: 'Leo', lastMessage: 'Hast du das Buch gelesen?', time: new Date(2024, 1, 9, 9, 9) },
-  { id: '13', name: 'Mia', lastMessage: 'Freust du dich auf das Wochenende?', time: new Date(2024, 1, 8, 8, 8) },
-  { id: '14', name: 'Noah', lastMessage: 'Hast du das Essen vorbereitet?', time: new Date(2024, 1, 7, 7, 7) },
-  { id: '15', name: 'Olivia', lastMessage: 'Lass uns morgen spazieren gehen.', time: new Date(2024, 1, 6, 6, 6) },
-  { id: '16', name: 'Peter', lastMessage: 'Wie war das Treffen?', time: new Date(2024, 1, 5, 5, 5) },
-  { id: '17', name: 'Quinn', lastMessage: 'Bist du bereit für die Präsentation?', time: new Date(2024, 1, 4, 4, 4) },
-  { id: '18', name: 'Rachel', lastMessage: 'Hast du meine Nachricht erhalten?', time: new Date(2024, 1, 3, 3, 3) },
-  { id: '19', name: 'Sam', lastMessage: 'Wie war dein Wochenende?', time: new Date(2024, 1, 2, 2, 2) },
-  { id: '20', name: 'Tom', lastMessage: 'Wann treffen wir uns?', time: new Date(2024, 1, 1, 1, 1) },
+  { id: '1', name: 'w', lastMessage: 'Wie geht es dir?', time: new Date(2024, 1, 20, 20, 20) },
 ];
 
-const availableContactsData = [
-  { id: '101', name: 'Emma Johnson' },
-  { id: '102', name: 'Liam Davis' },
-  { id: '103', name: 'Olivia Smith' },
-  { id: '104', name: 'Noah Wilson' },
-  { id: '105', name: 'Ava Brown' },
-  { id: '106', name: 'Isabella Jones' },
-  { id: '107', name: 'Sophia Taylor' },
-  { id: '108', name: 'Jackson Miller' },
-  { id: '109', name: 'Lucas Anderson' },
-  { id: '110', name: 'Aiden Thomas' },
-  { id: '111', name: 'Ella White' },
-  { id: '112', name: 'Carter Moore' },
-  { id: '113', name: 'Scarlett Robinson' },
-  { id: '114', name: 'Grayson Hall' },
-  { id: '115', name: 'Hazel Young' },
-  { id: '116', name: 'Aria Mitchell' },
-  { id: '117', name: 'Ezra Turner' },
-  { id: '118', name: 'Mila Cooper' },
-  { id: '119', name: 'Leo Reed' },
-  { id: '120', name: 'Nora Ward' },
-];
+{/* {id: '101', name: 'Emma Johnson'},
+{id: '102', name: 'Liam Davis'},
+{id: '103', name: 'Olivia Smith'},
+{id: '104', name: 'Noah Wilson'},
+{id: '105', name: 'Ava Brown'},
+{id: '106', name: 'Isabella Jones'},
+{id: '107', name: 'Sophia Taylor'},
+{id: '108', name: 'Jackson Miller'},
+{id: '109', name: 'Lucas Anderson'},
+{id: '110', name: 'Aiden Thomas'},
+{id: '111', name: 'Ella White'},
+{id: '112', name: 'Carter Moore'},
+{id: '113', name: 'Scarlett Robinson'},
+{id: '114', name: 'Grayson Hall'},
+{id: '115', name: 'Hazel Young'},
+{id: '116', name: 'Aria Mitchell'},
+{id: '117', name: 'Ezra Turner'},
+{id: '118', name: 'Mila Cooper'},
+{id: '119', name: 'Leo Reed'},
+{id: '120', name: 'Nora Ward'}, */}
+
+
+const availableContactsData = [];
 
 function FriendsPage() {
   const navigation = useNavigation();
@@ -72,7 +54,29 @@ function FriendsPage() {
       socketConnection.onmessage = (event) => {
         console.log("Received from the server: ", event.data);
         if (event.data === "login success") {
-          socketConnection.send("{'Typ':'getoverview','Content': {}}");
+          socketConnection.send("{'Typ':'getmembers','Content': {}}");
+        } else if (event.data === 'logout') {
+          console.log('logout');
+        } else {
+          try {
+            var array = JSON.parse(event.data);
+          } catch {
+            // Handle JSON parsing error
+          }
+          availableContactsData.splice(0, availableContactsData.length);
+
+          let isAlreadyInChats = false;
+          for (let i = 0; i < array.length; i++) {
+            for (let f = 0; f < recentChats.length; f++) {
+              if (array[i].userName === recentChats[f].name) {
+                isAlreadyInChats = true;
+              }
+            }
+            console.log("hallo", { id: i.toString(), name: array[i].userName });
+            if (!isAlreadyInChats) {
+            availableContactsData.push({ id: i.toString(), name: array[i].userName });
+            }
+          }
         }
       };
     } catch (error) {
